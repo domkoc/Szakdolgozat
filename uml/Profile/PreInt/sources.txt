@@ -1,0 +1,80 @@
+@startuml
+' STYLE START
+hide empty members
+skinparam shadowing false
+' STYLE END
+
+
+class "EditProfilePresenterInput" as EditProfilePresenterInput << (P, GoldenRod) protocol >> { 
+  ~view : EditProfileView?
+  ~interactor : ProfileInteractorInput
+  ~saveChanges(with:)
+  ~getIdOfUser()
+  ~getPresentationModel() 
+}
+class "EditProfilePresenter" as EditProfilePresenter << (C, DarkSeaGreen) >> { 
+  ~view : EditProfileView?
+  ~interactor : ProfileInteractorInput
+  -coordinator : ProfileCoordinator
+  -presentationModel : EditProfilePresentationModel
+  ~init(coordinator:interactor:view:presentationModel:) 
+}
+class "EditProfilePresenter" as EditProfilePresenter0 << (X, Orchid) extension >> { 
+  saveChanges(with:)
+  getIdOfUser()
+  getPresentationModel() 
+}
+class "UserProfilePresenterInput" as UserProfilePresenterInput << (P, GoldenRod) protocol >> { 
+  ~view : UserProfileView?
+  ~interactor : ProfileInteractorInput
+  ~presentationModel : UserProfilePresentationModel
+  ~navigateToEditProfile()
+  ~isMyProfile()
+  ~navigateToUsersEvents()
+  ~uploadProfilePicture(_:)
+  ~loadPicture() 
+}
+class "UserProfilePresenter" as UserProfilePresenter << (C, DarkSeaGreen) >> { 
+  ~view : UserProfileView?
+  ~interactor : ProfileInteractorInput
+  -coordinator : ProfileCoordinatorInput
+  ~presentationModel : UserProfilePresentationModel
+  ~init(coordinator:interactor:view:presentationModel:) 
+}
+class "UserProfilePresenter" as UserProfilePresenter1 << (X, Orchid) extension >> { 
+  navigateToEditProfile()
+  isMyProfile()
+  navigateToUsersEvents()
+  uploadProfilePicture(_:)
+  loadPicture() 
+}
+class "ProfileInteractorSuccess" as ProfileInteractorSuccess << (S, SkyBlue) struct >> {  
+}
+class "ProfileInteractorError" as ProfileInteractorError << (E, LightSteelBlue) enum >> { 
+  ~error(_:) 
+}
+class "ProfileInteractorInput" as ProfileInteractorInput << (P, GoldenRod) protocol >> { 
+  ~saveProfile(credentials:completion:)
+  ~uploadProfilePicture(_:completion:)
+  ~getProfileImage(of:completion:) 
+}
+class "ProfileInteractor" as ProfileInteractor << (C, DarkSeaGreen) >> { 
+  -profileApi : ProfileAPIInput
+  ~init(profileApi:) 
+}
+class "ProfileInteractor" as ProfileInteractor2 << (X, Orchid) extension >> { 
+  saveProfile(credentials:completion:)
+  uploadProfilePicture(_:completion:)
+  getProfileImage(of:completion:) 
+}
+AnyObject <|.. EditProfilePresenterInput : inherits
+EditProfilePresenterInput <|.. EditProfilePresenter : confirms to
+AnyObject <|.. UserProfilePresenterInput : inherits
+UserProfilePresenterInput <|.. UserProfilePresenter : confirms to
+Error -- ProfileInteractorError : inherits
+AnyObject <|.. ProfileInteractorInput : inherits
+ProfileInteractorInput <|.. ProfileInteractor : confirms to
+EditProfilePresenter <.. EditProfilePresenter0 : ext
+UserProfilePresenter <.. UserProfilePresenter1 : ext
+ProfileInteractor <.. ProfileInteractor2 : ext
+@enduml

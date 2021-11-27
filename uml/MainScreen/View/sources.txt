@@ -1,0 +1,33 @@
+@startuml
+' STYLE START
+hide empty members
+skinparam shadowing false
+' STYLE END
+
+
+class "MainScreenPresentationModel" as MainScreenPresentationModel << (S, SkyBlue) struct >> { 
+  ~profile : Profile 
+}
+class "MainScreenView" as MainScreenView << (P, GoldenRod) protocol >> { 
+  ~presenter : MainScreenPresenterInput?
+  ~loadProfileData(_:) 
+}
+class "MainScreenViewController" as MainScreenViewController << (C, DarkSeaGreen) >> { 
+  ~label : UILabel!
+  ~presenter : MainScreenPresenterInput?
+  ~presentationModel : MainScreenPresentationModel?
+  ~viewDidLoad()
+  ~viewWillAppear(_:)
+  -customizeViews()
+  ~EventsButtonTapped(_:)
+  ~profileButtonTapped(_:)
+  ~logoutButtonTapped(_:) 
+}
+class "MainScreenViewController" as MainScreenViewController0 << (X, Orchid) extension >> { 
+  loadProfileData(_:) 
+}
+BaseView <|.. MainScreenView : inherits
+UIViewController <|-- MainScreenViewController : inherits
+MainScreenView <|.. MainScreenViewController : confirms to
+MainScreenViewController <.. MainScreenViewController0 : ext
+@enduml

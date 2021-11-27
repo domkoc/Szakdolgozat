@@ -1,0 +1,65 @@
+@startuml
+' STYLE START
+hide empty members
+skinparam shadowing false
+' STYLE END
+
+
+class "EventWorkersPivot" as EventWorkersPivot << (C, DarkSeaGreen) >> { 
+  ~{static} schema
+  ~id : UUID?
+  ~event : Event
+  ~user : User
+  ~init()
+  ~init(id:event:user:) 
+}
+class "Event" as Event << (C, DarkSeaGreen) >> { 
+  ~{static} schema
+  ~id : UUID?
+  ~organizer : User
+  ~title : String
+  ~image : String?
+  ~description : String
+  ~startDate : Date
+  ~endDate : Date
+  ~location : String
+  ~isApplyable : Bool
+  ~applicationStart : Date?
+  ~applicationEnd : Date?
+  ~applicants : [User]
+  ~workers : [User]
+  ~parentEvent : Event?
+  ~subEvents : [Event]
+  ~init()
+  ~init(id:organizer:title:description:startDate:endDate:location:isApplyable:applicationStart:applicationEnd:parentEvent:)
+  ~{static} create(from:organizer:) 
+}
+class "Event" as Event0 << (X, Orchid) extension >> { 
+  asPublic()
+  isMain() 
+}
+class "EventLoopFuture" as EventLoopFuture << (X, Orchid) extension >> { 
+  asPublic() 
+}
+class "Collection" as Collection << (X, Orchid) extension >> { 
+  asPublic()
+  onlyMainEvents() 
+}
+class "EventLoopFuture" as EventLoopFuture1 << (X, Orchid) extension >> { 
+  asPublic() 
+}
+class "EventApplicantsPivot" as EventApplicantsPivot << (C, DarkSeaGreen) >> { 
+  ~{static} schema
+  ~id : UUID?
+  ~event : Event
+  ~user : User
+  ~init()
+  ~init(id:event:user:) 
+}
+Model <|-- EventWorkersPivot : inherits
+Model <|-- Event : inherits
+Content <|-- Event : inherits
+Model <|-- EventApplicantsPivot : inherits
+Event <.. Event0 : ext
+EventLoopFuture <.. EventLoopFuture1 : ext
+@enduml

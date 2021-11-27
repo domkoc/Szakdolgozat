@@ -1,0 +1,39 @@
+@startuml
+' STYLE START
+hide empty members
+skinparam shadowing false
+' STYLE END
+
+
+class "EventsViewControllerFactory" as EventsViewControllerFactory << (C, DarkSeaGreen) >> {  
+}
+class "EventsCoordinatorInput" as EventsCoordinatorInput << (P, GoldenRod) protocol >> { 
+  ~navigateToNewEvent()
+  ~navigateToNewEvent(with:)
+  ~navigateToEventDetails(with:)
+  ~navigateToProfile(of:)
+  ~navigateToApplicants(of:)
+  ~navigateBack()
+  ~navigateToSubEvents(of:) 
+}
+class "EventsCoordinator" as EventsCoordinator << (C, DarkSeaGreen) >> { 
+  -rootViewController : UINavigationController?
+  -appCoordinator : AppCoordinator?
+  -eventApi : EventAPIInput
+  -profileApi : ProfileAPIInput
+  -interactor : EventsInteractorInput
+  ~init(rootViewController:appCoordinator:)
+  ~start(with:) 
+}
+class "EventsCoordinator" as EventsCoordinator0 << (X, Orchid) extension >> { 
+  navigateToNewEvent()
+  navigateToNewEvent(with:)
+  navigateToEventDetails(with:)
+  navigateToProfile(of:)
+  navigateToApplicants(of:)
+  navigateBack()
+  navigateToSubEvents(of:) 
+}
+EventsCoordinatorInput <|.. EventsCoordinator : confirms to
+EventsCoordinator <.. EventsCoordinator0 : ext
+@enduml

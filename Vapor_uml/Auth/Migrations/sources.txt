@@ -1,0 +1,14 @@
+@startuml
+' STYLE START
+hide empty members
+skinparam shadowing false
+' STYLE END
+
+
+class "CreateTokens" as CreateTokens << (S, SkyBlue) struct >> { 
+  ~prepare(on:)
+  ~revert(on:) 
+}
+Migration <|-- CreateTokens : inherits
+
+@enduml

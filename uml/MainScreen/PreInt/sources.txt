@@ -1,0 +1,54 @@
+@startuml
+' STYLE START
+hide empty members
+skinparam shadowing false
+' STYLE END
+
+
+class "MainScreenInteractorSuccess" as MainScreenInteractorSuccess << (E, LightSteelBlue) enum >> {  
+}
+class "MainScreenInteractorError" as MainScreenInteractorError << (E, LightSteelBlue) enum >> { 
+  ~error(_:) 
+}
+class "MainScreenInteractorInput" as MainScreenInteractorInput << (P, GoldenRod) protocol >> { 
+  ~getProfile(completion:)
+  ~logout(completion:) 
+}
+class "MainScreenInteractor" as MainScreenInteractor << (C, DarkSeaGreen) >> { 
+  -profileApi : ProfileAPIInput
+  -authenticationService : AuthenticationService
+  ~init(profileApi:authenticationService:) 
+}
+class "MainScreenInteractor" as MainScreenInteractor0 << (X, Orchid) extension >> { 
+  getProfile(completion:)
+  logout(completion:) 
+}
+class "MainScreenPresenterInput" as MainScreenPresenterInput << (P, GoldenRod) protocol >> { 
+  ~view : MainScreenView?
+  ~interactor : MainScreenInteractorInput
+  ~loadProfileData()
+  ~navigateToEvents()
+  ~navigateToProfile(with:)
+  ~logout() 
+}
+class "MainScreenPresenter" as MainScreenPresenter << (C, DarkSeaGreen) >> { 
+  ~view : MainScreenView?
+  ~interactor : MainScreenInteractorInput
+  -coordinator : MainScreenCoordinatorInput
+  -profilePresentationModel : Profile?
+  ~init(coordinator:interactor:view:) 
+}
+class "MainScreenPresenter" as MainScreenPresenter1 << (X, Orchid) extension >> { 
+  loadProfileData()
+  navigateToEvents()
+  navigateToProfile(with:)
+  logout() 
+}
+Error -- MainScreenInteractorError : inherits
+AnyObject <|.. MainScreenInteractorInput : inherits
+MainScreenInteractorInput <|.. MainScreenInteractor : confirms to
+AnyObject <|.. MainScreenPresenterInput : inherits
+MainScreenPresenterInput <|.. MainScreenPresenter : confirms to
+MainScreenInteractor <.. MainScreenInteractor0 : ext
+MainScreenPresenter <.. MainScreenPresenter1 : ext
+@enduml

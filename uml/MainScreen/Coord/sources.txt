@@ -1,0 +1,32 @@
+@startuml
+' STYLE START
+hide empty members
+skinparam shadowing false
+' STYLE END
+
+
+class "MainScreenCoordinatorInput" as MainScreenCoordinatorInput << (P, GoldenRod) protocol >> { 
+  ~navigateBackToRoot()
+  ~navigateBackToLogin()
+  ~navigateToProfile(with:)
+  ~navigateToEvents() 
+}
+class "MainScreenCoordinator" as MainScreenCoordinator << (C, DarkSeaGreen) >> { 
+  -rootViewController : UINavigationController
+  -appCoordinator : AppCoordinator
+  -profileApi : ProfileAPIInput
+  ~init(rootViewController:appCoordinator:)
+  ~start()
+  ~navigateMainScreen() 
+}
+class "MainScreenCoordinator" as MainScreenCoordinator0 << (X, Orchid) extension >> { 
+  navigateBackToRoot()
+  navigateBackToLogin()
+  navigateToProfile(with:)
+  navigateToEvents() 
+}
+class "MainScreenViewControllerFactory" as MainScreenViewControllerFactory << (C, DarkSeaGreen) >> {  
+}
+MainScreenCoordinatorInput <|.. MainScreenCoordinator : confirms to
+MainScreenCoordinator <.. MainScreenCoordinator0 : ext
+@enduml

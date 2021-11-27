@@ -1,0 +1,30 @@
+@startuml
+' STYLE START
+hide empty members
+skinparam shadowing false
+' STYLE END
+
+
+class "ProfileCoordinatorInput" as ProfileCoordinatorInput << (P, GoldenRod) protocol >> { 
+  ~navigateToEditProfile(with:)
+  ~navigateToMainScreen()
+  ~navigateToEventsOf(_:) 
+}
+class "ProfileCoordinator" as ProfileCoordinator << (C, DarkSeaGreen) >> { 
+  -rootViewController : UINavigationController?
+  -appCoordinator : AppCoordinator?
+  -profileApi : ProfileAPIInput
+  -interactor : ProfileInteractorInput
+  ~init(rootViewController:appCoordinator:)
+  ~start(with:) 
+}
+class "ProfileCoordinator" as ProfileCoordinator0 << (X, Orchid) extension >> { 
+  navigateToEditProfile(with:)
+  navigateToMainScreen()
+  navigateToEventsOf(_:) 
+}
+class "ProfileViewControllerFactory" as ProfileViewControllerFactory << (C, DarkSeaGreen) >> {  
+}
+ProfileCoordinatorInput <|.. ProfileCoordinator : confirms to
+ProfileCoordinator <.. ProfileCoordinator0 : ext
+@enduml

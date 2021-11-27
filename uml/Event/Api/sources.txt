@@ -1,0 +1,43 @@
+@startuml
+' STYLE START
+hide empty members
+skinparam shadowing false
+' STYLE END
+
+
+class "EventAPIInput" as EventAPIInput << (P, GoldenRod) protocol >> { 
+  ~getAllEvent(completion:)
+  ~createNewEvent(with:completion:)
+  ~getEventsByUserId(with:completion:)
+  ~getEventApplicationState(with:completion:)
+  ~applyToEvent(with:completion:)
+  ~toggleEventAppliability(with:completion:)
+  ~getApplicantsByEvent(with:completion:)
+  ~getWorkersByEvent(with:completion:)
+  ~acceptApplicant(_:on:completion:)
+  ~getSubEvents(of:completion:)
+  ~createNewSubEvent(for:with:completion:)
+  ~uploadEventPicture(_:for:progressCompletion:completion:)
+  ~getEventPicture(of:completion:) 
+}
+class "EventAPI" as EventAPI << (C, DarkSeaGreen) >> {  
+}
+class "EventAPI" as EventAPI0 << (X, Orchid) extension >> { 
+  getAllEvent(completion:)
+  createNewEvent(with:completion:)
+  getEventsByUserId(with:completion:)
+  getEventApplicationState(with:completion:)
+  applyToEvent(with:completion:)
+  toggleEventAppliability(with:completion:)
+  getApplicantsByEvent(with:completion:)
+  getWorkersByEvent(with:completion:)
+  acceptApplicant(_:on:completion:)
+  getSubEvents(of:completion:)
+  createNewSubEvent(for:with:completion:)
+  uploadEventPicture(_:for:progressCompletion:completion:)
+  getEventPicture(of:completion:) 
+}
+APIBase <|-- EventAPI : inherits
+EventAPIInput <|.. EventAPI : confirms to
+EventAPI <.. EventAPI0 : ext
+@enduml

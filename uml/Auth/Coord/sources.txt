@@ -1,0 +1,33 @@
+@startuml
+' STYLE START
+hide empty members
+skinparam shadowing false
+' STYLE END
+
+
+class "AuthenticationCoordinatorInput" as AuthenticationCoordinatorInput << (P, GoldenRod) protocol >> { 
+  ~navigateToRegister()
+  ~navigateToMainScreen()
+  ~navigateBackToLogin() 
+}
+class "AuthenticationCoordinator" as AuthenticationCoordinator << (C, DarkSeaGreen) >> { 
+  -rootViewController : UINavigationController?
+  -appCoordinator : AppCoordinator?
+  -authenticationApi : AuthenticationAPIInput
+  -profileApi : ProfileAPIInput
+  -interactor : AuthenticationInteractorInput
+  -authenticationService : AuthenticationService
+  ~init(rootViewController:appCoordinator:)
+  ~start()
+  -navigateToLogin() 
+}
+class "AuthenticationCoordinator" as AuthenticationCoordinator0 << (X, Orchid) extension >> { 
+  navigateToRegister()
+  navigateToMainScreen()
+  navigateBackToLogin() 
+}
+class "AuthenticationViewControllerFactory" as AuthenticationViewControllerFactory << (C, DarkSeaGreen) >> {  
+}
+AuthenticationCoordinatorInput <|.. AuthenticationCoordinator : confirms to
+AuthenticationCoordinator <.. AuthenticationCoordinator0 : ext
+@enduml

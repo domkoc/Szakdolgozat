@@ -1,0 +1,19 @@
+@startuml
+' STYLE START
+hide empty members
+skinparam shadowing false
+' STYLE END
+
+
+class "EventError" as EventError << (E, LightSteelBlue) enum >> { 
+  ~eventTitleTaken
+  ~notApplyable 
+}
+class "EventError" as EventError0 << (X, Orchid) extension >> { 
+  description : String
+  status : HTTPResponseStatus
+  reason : String 
+}
+AbortError -- EventError : inherits
+EventError <.. EventError0 : ext
+@enduml

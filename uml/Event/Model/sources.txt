@@ -1,0 +1,33 @@
+@startuml
+' STYLE START
+hide empty members
+skinparam shadowing false
+' STYLE END
+
+
+class "Event" as Event << (S, SkyBlue) struct >> { 
+  ~id : UUID
+  ~organizerID : UUID
+  ~title : String
+  ~description : String
+  ~startDate : Date
+  ~endDate : Date
+  ~location : CLLocation
+  ~isApplyable : Bool
+  ~applicationStart : Date?
+  ~applicationEnd : Date?
+  ~parentEventID : UUID?
+  ~init(id:organizerID:title:description:startDate:endDate:location:isApplyable:applicationStart:applicationEnd:parentEventID:)
+  ~init(dto:) 
+}
+class "NewEvent" as NewEvent << (S, SkyBlue) struct >> { 
+  ~title : String
+  ~description : String
+  ~startDate : Date
+  ~endDate : Date
+  ~location : Location
+  ~dto : NewEventUploadDto 
+}
+
+
+@enduml

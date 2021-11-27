@@ -1,0 +1,39 @@
+@startuml
+' STYLE START
+hide empty members
+skinparam shadowing false
+' STYLE END
+
+
+class "AuthenticationServiceSuccess" as AuthenticationServiceSuccess << (E, LightSteelBlue) enum >> {  
+}
+class "AuthenticationServiceError" as AuthenticationServiceError << (E, LightSteelBlue) enum >> { 
+  ~error(_:) 
+}
+class "AuthenticationService" as AuthenticationService << (C, DarkSeaGreen) >> { 
+  ~{static} shared
+  -authenticationApi : AuthenticationAPIInput
+  -init()
+  ~hasValidAccessToken : Bool
+  ~loginWithCredentials(credentials:completion:)
+  -saveLoginData(_:)
+  -saveUser(id:userName:)
+  ~clearUserData()
+  -saveToken(_:expiration:)
+  ~logout(completion:) 
+}
+class "AuthenticationAPIInput" as AuthenticationAPIInput << (P, GoldenRod) protocol >> { 
+  ~login(with:completion:)
+  ~register(with:completion:) 
+}
+class "AuthenticationAPI" as AuthenticationAPI << (C, DarkSeaGreen) >> {  
+}
+class "AuthenticationAPI" as AuthenticationAPI0 << (X, Orchid) extension >> { 
+  login(with:completion:)
+  register(with:completion:) 
+}
+Error -- AuthenticationServiceError : inherits
+APIBase <|-- AuthenticationAPI : inherits
+AuthenticationAPIInput <|.. AuthenticationAPI : confirms to
+AuthenticationAPI <.. AuthenticationAPI0 : ext
+@enduml

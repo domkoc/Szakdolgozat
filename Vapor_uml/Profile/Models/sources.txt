@@ -1,0 +1,78 @@
+@startuml
+' STYLE START
+hide empty members
+skinparam shadowing false
+' STYLE END
+
+
+class "SCHgroup" as SCHgroup << (E, LightSteelBlue) enum >> { 
+  ~sir
+  ~nyuszi
+  ~ttny
+  ~drwu
+  ~fekete 
+}
+class "Roles" as Roles << (E, LightSteelBlue) enum >> { 
+  ~user
+  ~admin 
+}
+class "User" as User << (C, DarkSeaGreen) >> { 
+  ~{static} schema
+  ~id : UUID?
+  ~username : String
+  ~image : String?
+  ~passwordHash : String
+  ~fullname : String
+  ~nickname : String?
+  ~schgroup : SCHgroup?
+  ~roles : [Roles]
+  ~createdAt : Date?
+  ~updatedAt : Date?
+  ~events : [Event]
+  ~init()
+  ~init(id:username:passwordHash:fullname:nickname:schgroup:roles:)
+  ~{static} create(from:)
+  ~createToken(source:) 
+}
+class "User" as User0 << (X, Orchid) extension >> { 
+  asPublic() 
+}
+class "EventLoopFuture" as EventLoopFuture << (X, Orchid) extension >> { 
+  asPublic() 
+}
+class "EventLoopFuture" as EventLoopFuture1 << (X, Orchid) extension >> {  
+}
+class "Collection" as Collection << (X, Orchid) extension >> { 
+  asPublic() 
+}
+class "EventLoopFuture" as EventLoopFuture2 << (X, Orchid) extension >> { 
+  asPublic() 
+}
+class "User" as User3 << (X, Orchid) extension >> { 
+  {static} usernameKey
+  {static} passwordHashKey
+  verify(password:) 
+}
+class "User" as User4 << (X, Orchid) extension >> {  
+}
+class "User" as User5 << (X, Orchid) extension >> {  
+}
+class "UserLoginAuthenticator" as UserLoginAuthenticator << (S, SkyBlue) struct >> { 
+  ~authenticate(request:) 
+}
+String -- SCHgroup : inherits
+Codable -- SCHgroup : inherits
+String -- Roles : inherits
+Codable -- Roles : inherits
+Authenticatable <.. EventLoopFuture : inherits
+ModelAuthenticatable <|-- User : inherits
+ModelSessionAuthenticatable <|-- User : inherits
+Authenticatable <|-- User : inherits
+RequestAuthenticator <|-- UserLoginAuthenticator : inherits
+User <.. User0 : ext
+EventLoopFuture <.. EventLoopFuture1 : ext
+EventLoopFuture <.. EventLoopFuture2 : ext
+User <.. User3 : ext
+User <.. User4 : ext
+User <.. User5 : ext
+@enduml

@@ -1,0 +1,56 @@
+@startuml
+' STYLE START
+hide empty members
+skinparam shadowing false
+' STYLE END
+
+
+class "UserSignup" as UserSignup << (S, SkyBlue) struct >> { 
+  ~username : String
+  ~password : String
+  ~fullname : String
+  ~nickname : String?
+  ~schgroup : SCHgroup? 
+}
+class "UserLogin" as UserLogin << (S, SkyBlue) struct >> { 
+  ~email : String
+  ~password : String 
+}
+class "NewSession" as NewSession << (S, SkyBlue) struct >> { 
+  ~token : String
+  ~user : User.Public
+  ~expiration : Double? 
+}
+class "UserEdit" as UserEdit << (S, SkyBlue) struct >> { 
+  ~id : UUID
+  ~username : String
+  ~fullname : String
+  ~nickname : String?
+  ~schgroup : SCHgroup? 
+}
+class "NewProfileImageUpload" as NewProfileImageUpload << (S, SkyBlue) struct >> { 
+  ~image : Data 
+}
+class "UserSignup" as UserSignup0 << (X, Orchid) extension >> { 
+  {static} validations(_:) 
+}
+class "UserEdit" as UserEdit1 << (X, Orchid) extension >> { 
+  {static} validations(_:) 
+}
+class "UserController" as UserController << (S, SkyBlue) struct >> { 
+  ~imageFolder
+  ~boot(routes:)
+  ~getMyOwnUser(req:)
+  -checkIfUserExists(_:req:) 
+}
+Content <|-- UserSignup : inherits
+Content <|-- UserLogin : inherits
+Content <|-- NewSession : inherits
+Content <|-- UserEdit : inherits
+Content <|-- NewProfileImageUpload : inherits
+Validatable <|-- UserSignup : inherits
+Validatable <|-- UserEdit : inherits
+RouteCollection <|-- UserController : inherits
+UserSignup <.. UserSignup0 : ext
+UserEdit <.. UserEdit1 : ext
+@enduml

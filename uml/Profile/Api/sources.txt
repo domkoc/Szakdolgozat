@@ -1,0 +1,27 @@
+@startuml
+' STYLE START
+hide empty members
+skinparam shadowing false
+' STYLE END
+
+
+class "ProfileAPIInput" as ProfileAPIInput << (P, GoldenRod) protocol >> { 
+  ~getProfile(completion:)
+  ~editProfile(with:completion:)
+  ~getProfilebyId(with:completion:)
+  ~uploadProfilePicture(_:progressCompletion:completion:)
+  ~getProfilePicture(of:completion:) 
+}
+class "ProfileAPI" as ProfileAPI << (C, DarkSeaGreen) >> {  
+}
+class "ProfileAPI" as ProfileAPI0 << (X, Orchid) extension >> { 
+  getProfile(completion:)
+  editProfile(with:completion:)
+  getProfilebyId(with:completion:)
+  uploadProfilePicture(_:progressCompletion:completion:)
+  getProfilePicture(of:completion:) 
+}
+APIBase <|-- ProfileAPI : inherits
+ProfileAPIInput <|.. ProfileAPI : confirms to
+ProfileAPI <.. ProfileAPI0 : ext
+@enduml

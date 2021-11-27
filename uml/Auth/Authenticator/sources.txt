@@ -1,0 +1,20 @@
+@startuml
+' STYLE START
+hide empty members
+skinparam shadowing false
+' STYLE END
+
+
+class "SSSLAuthenticator" as SSSLAuthenticator << (C, DarkSeaGreen) >> { 
+  -tokenManager : TokenManager
+  ~coordinator : AppCoordinator?
+  ~init(tokenManager:)
+  ~apply(_:to:)
+  ~refresh(_:for:completion:)
+  -logInAgain()
+  ~didRequest(_:with:failDueToAuthenticationError:)
+  ~isRequest(_:authenticatedWith:) 
+}
+Authenticator <|-- SSSLAuthenticator : inherits
+
+@enduml

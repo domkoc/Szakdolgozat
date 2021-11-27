@@ -1,0 +1,212 @@
+@startuml
+' STYLE START
+hide empty members
+skinparam shadowing false
+' STYLE END
+
+
+class "SubEventsView" as SubEventsView << (P, GoldenRod) protocol >> { 
+  ~presenter : SubEventsPresenterInput?
+  ~loadData() 
+}
+class "SubEventsViewController" as SubEventsViewController << (C, DarkSeaGreen) >> { 
+  ~subEventsTableView : UITableView!
+  ~presenter : SubEventsPresenterInput?
+  ~viewDidLoad()
+  ~viewDidAppear(_:)
+  -customizeViews()
+  -customizeTableView()
+  ~newSubEventButtonTapped(_:) 
+}
+class "SubEventsViewController" as SubEventsViewController0 << (X, Orchid) extension >> { 
+  loadData() 
+}
+class "SubEventsViewController" as SubEventsViewController1 << (X, Orchid) extension >> { 
+  tableView(_:numberOfRowsInSection:)
+  tableView(_:cellForRowAt:) 
+}
+class "SubEventsViewController" as SubEventsViewController2 << (X, Orchid) extension >> { 
+  subEventSelected(_:) 
+}
+class "AllEventsView" as AllEventsView << (P, GoldenRod) protocol >> { 
+  ~presenter : AllEventsPresenterInput?
+  ~loadEventsData(_:) 
+}
+class "AllEventsViewController" as AllEventsViewController << (C, DarkSeaGreen) >> { 
+  ~eventsTableView : UITableView!
+  ~newEventButtonTopConstraint : NSLayoutConstraint!
+  ~newEventButtonHeightConstraint : NSLayoutConstraint!
+  ~newEventButton : UIButton!
+  ~presenter : AllEventsPresenterInput?
+  -presentationModel : AllEventsPresentationModel?
+  ~viewDidLoad()
+  ~viewWillAppear(_:)
+  -customizeViews()
+  -customizeTableView()
+  ~newEventButtonTapped(_:) 
+}
+class "AllEventsViewController" as AllEventsViewController3 << (X, Orchid) extension >> { 
+  loadEventsData(_:) 
+}
+class "AllEventsViewController" as AllEventsViewController4 << (X, Orchid) extension >> { 
+  tableView(_:numberOfRowsInSection:)
+  tableView(_:cellForRowAt:) 
+}
+class "AllEventsViewController" as AllEventsViewController5 << (X, Orchid) extension >> { 
+  tableView(_:didSelectRowAt:) 
+}
+class "SubEventsPresentationModel" as SubEventsPresentationModel << (S, SkyBlue) struct >> { 
+  ~subEvents : [Event] 
+}
+class "NewEventPresentationModel" as NewEventPresentationModel << (S, SkyBlue) struct >> { 
+  ~event : NewEvent 
+}
+class "AllEventsPresentationModel" as AllEventsPresentationModel << (S, SkyBlue) struct >> { 
+  ~events : [Event] 
+}
+class "EventApplicantsPresentationModel" as EventApplicantsPresentationModel << (S, SkyBlue) struct >> { 
+  ~applicants : [Profile]
+  ~workers : [Profile] 
+}
+class "EventApplicantsView" as EventApplicantsView << (P, GoldenRod) protocol >> { 
+  ~presenter : EventApplicantsPresenterInput?
+  ~loadData() 
+}
+class "EventApplicantsViewController" as EventApplicantsViewController << (C, DarkSeaGreen) >> { 
+  ~applicantsTableView : UITableView!
+  ~workersTableView : UITableView!
+  ~acceptButtonTopConstraint : NSLayoutConstraint!
+  ~acceptButtonHeightConstraint : NSLayoutConstraint!
+  ~acceptButton : UIButton!
+  ~profileButton : UIButton!
+  ~presenter : EventApplicantsPresenterInput?
+  -selectedProfile : Profile?
+  ~viewDidLoad()
+  ~viewDidAppear(_:)
+  -customizeViews()
+  -customizeTableViews()
+  ~acceptButtonTapped(_:)
+  ~profileButtonTapped(_:) 
+}
+class "EventApplicantsViewController" as EventApplicantsViewController6 << (X, Orchid) extension >> { 
+  loadData() 
+}
+class "EventApplicantsViewController" as EventApplicantsViewController7 << (X, Orchid) extension >> { 
+  tableView(_:titleForHeaderInSection:)
+  tableView(_:numberOfRowsInSection:)
+  tableView(_:cellForRowAt:) 
+}
+class "EventApplicantsViewController" as EventApplicantsViewController8 << (X, Orchid) extension >> { 
+  tableView(_:didSelectRowAt:)
+  tableView(_:didDeselectRowAt:) 
+}
+class "NewEventView" as NewEventView << (P, GoldenRod) protocol >> { 
+  ~presenter : NewEventPresenterInput?
+  ~enableDoneButton() 
+}
+class "NewEventViewController" as NewEventViewController << (C, DarkSeaGreen) >> { 
+  ~locationLabel : UILabel!
+  ~titleTextField : UITextField!
+  ~startDateTextField : UITextField!
+  ~endDateTextField : UITextField!
+  ~descriptionTextView : UITextView!
+  ~doneButton : UIButton!
+  -locationPicker
+  -endDatePicker
+  -startDatePicker
+  -dateFormatter
+  -selectedLocation : Location?
+  ~presenter : NewEventPresenterInput?
+  ~viewDidLoad()
+  -customizeViews()
+  -customizeLocationPicker()
+  -customizeTextFields()
+  -customizeDatePicker()
+  -customizeDateFormatter()
+  -startDateSelected()
+  -endDateSelected()
+  ~selectLocationButtonTapped(_:)
+  ~doneButtonTapped(_:)
+  -verifyInputs() 
+}
+class "NewEventViewController" as NewEventViewController9 << (X, Orchid) extension >> { 
+  enableDoneButton() 
+}
+class "EventDetailsView" as EventDetailsView << (P, GoldenRod) protocol >> { 
+  ~presenter : EventDetailsPresenterInput?
+  ~loadData(_:)
+  ~toggleApplyButtonState(didApply:)
+  ~toggleAppliabilityState(appliable:)
+  ~updateImage(_:) 
+}
+class "EventDetailsViewController" as EventDetailsViewController << (C, DarkSeaGreen) >> { 
+  ~imageView : UIImageView!
+  ~titleLabel : UILabel!
+  ~usernameButton : UIButton!
+  ~dateLabel : UILabel!
+  ~locationMapView : MKMapView!
+  ~applyButton : UIButton!
+  ~contentScrollView : UIScrollView!
+  ~presenter : EventDetailsPresenterInput?
+  ~viewDidLoad()
+  ~viewDidAppear(_:)
+  -customizeViews()
+  -customizeApplyButton()
+  ~usernameButtonTapped(_:)
+  ~applyButtonTapped(_:)
+  ~listApplicationsButtonTapped(_:)
+  ~listSubEventsButtonTapped(_:)
+  ~imageViewLongPressed(_:)
+  -imageSelected(_:) 
+}
+class "EventDetailsViewController" as EventDetailsViewController10 << (X, Orchid) extension >> { 
+  loadData(_:)
+  toggleApplyButtonState(didApply:)
+  toggleAppliabilityState(appliable:)
+  updateImage(_:) 
+}
+class "EventDetailsViewController" as EventDetailsViewController11 << (X, Orchid) extension >> { 
+  imagePickerController(_:didFinishPickingMediaWithInfo:)
+  imagePickerControllerDidCancel(_:) 
+}
+class "EventDetailsPresentationModel" as EventDetailsPresentationModel << (S, SkyBlue) struct >> { 
+  ~event : Event
+  ~organizer : Profile?
+  ~didApplyToEvent : Bool? 
+}
+BaseView <|.. SubEventsView : inherits
+UIViewController <|-- SubEventsViewController : inherits
+SubEventsView <|.. SubEventsViewController : confirms to
+UITableViewDataSource <|-- SubEventsViewController : inherits
+SubEventsTableViewCellDelegate <|-- SubEventsViewController : inherits
+BaseView <|.. AllEventsView : inherits
+UIViewController <|-- AllEventsViewController : inherits
+AllEventsView <|.. AllEventsViewController : confirms to
+UITableViewDataSource <|-- AllEventsViewController : inherits
+UITableViewDelegate <|-- AllEventsViewController : inherits
+BaseView <|.. EventApplicantsView : inherits
+UIViewController <|-- EventApplicantsViewController : inherits
+EventApplicantsView <|.. EventApplicantsViewController : confirms to
+UITableViewDataSource <|-- EventApplicantsViewController : inherits
+UITableViewDelegate <|-- EventApplicantsViewController : inherits
+BaseView <|.. NewEventView : inherits
+UIViewController <|-- NewEventViewController : inherits
+NewEventView <|.. NewEventViewController : confirms to
+BaseView <|.. EventDetailsView : inherits
+UIViewController <|-- EventDetailsViewController : inherits
+EventDetailsView <|.. EventDetailsViewController : confirms to
+UIImagePickerControllerDelegate <|-- EventDetailsViewController : inherits
+UINavigationControllerDelegate <|-- EventDetailsViewController : inherits
+SubEventsViewController <.. SubEventsViewController0 : ext
+SubEventsViewController <.. SubEventsViewController1 : ext
+SubEventsViewController <.. SubEventsViewController2 : ext
+AllEventsViewController <.. AllEventsViewController3 : ext
+AllEventsViewController <.. AllEventsViewController4 : ext
+AllEventsViewController <.. AllEventsViewController5 : ext
+EventApplicantsViewController <.. EventApplicantsViewController6 : ext
+EventApplicantsViewController <.. EventApplicantsViewController7 : ext
+EventApplicantsViewController <.. EventApplicantsViewController8 : ext
+NewEventViewController <.. NewEventViewController9 : ext
+EventDetailsViewController <.. EventDetailsViewController10 : ext
+EventDetailsViewController <.. EventDetailsViewController11 : ext
+@enduml

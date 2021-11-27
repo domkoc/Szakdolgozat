@@ -1,0 +1,67 @@
+@startuml
+' STYLE START
+hide empty members
+skinparam shadowing false
+' STYLE END
+
+
+class "RegisterPresenterInput" as RegisterPresenterInput << (P, GoldenRod) protocol >> { 
+  ~view : RegisterView?
+  ~interactor : AuthenticationInteractorInput
+  ~register(with:) 
+}
+class "RegisterPresenter" as RegisterPresenter << (C, DarkSeaGreen) >> { 
+  ~view : RegisterView?
+  ~interactor : AuthenticationInteractorInput
+  -coordinator : AuthenticationCoordinatorInput
+  ~init(coordinator:interactor:view:) 
+}
+class "RegisterPresenter" as RegisterPresenter0 << (X, Orchid) extension >> { 
+  register(with:) 
+}
+class "LoginPresenterInput" as LoginPresenterInput << (P, GoldenRod) protocol >> { 
+  ~view : LoginView?
+  ~interactor : AuthenticationInteractorInput
+  ~navigateToRegister()
+  ~login() 
+}
+class "LoginPresenter" as LoginPresenter << (C, DarkSeaGreen) >> { 
+  ~view : LoginView?
+  ~interactor : AuthenticationInteractorInput
+  -coordinator : AuthenticationCoordinatorInput
+  ~init(coordinator:interactor:view:) 
+}
+class "LoginPresenter" as LoginPresenter1 << (X, Orchid) extension >> { 
+  login()
+  navigateToRegister() 
+}
+class "AuthenticationInteractorSuccess" as AuthenticationInteractorSuccess << (S, SkyBlue) struct >> {  
+}
+class "AuthenticationInteractorError" as AuthenticationInteractorError << (E, LightSteelBlue) enum >> { 
+  ~error(_:) 
+}
+class "AuthenticationInteractorInput" as AuthenticationInteractorInput << (P, GoldenRod) protocol >> { 
+  ~login(credentials:completion:)
+  ~register(credentials:completion:) 
+}
+class "AuthenticationInteractor" as AuthenticationInteractor << (C, DarkSeaGreen) >> { 
+  -authenticationApi : AuthenticationAPIInput
+  -profileApi : ProfileAPIInput
+  -authenticationService : AuthenticationService
+  ~init(authenticationApi:profileApi:authenticationService:) 
+}
+class "AuthenticationInteractor" as AuthenticationInteractor2 << (X, Orchid) extension >> { 
+  login(credentials:completion:)
+  register(credentials:completion:) 
+}
+AnyObject <|.. RegisterPresenterInput : inherits
+RegisterPresenterInput <|.. RegisterPresenter : confirms to
+AnyObject <|.. LoginPresenterInput : inherits
+LoginPresenterInput <|.. LoginPresenter : confirms to
+Error -- AuthenticationInteractorError : inherits
+AnyObject <|.. AuthenticationInteractorInput : inherits
+AuthenticationInteractorInput <|.. AuthenticationInteractor : confirms to
+RegisterPresenter <.. RegisterPresenter0 : ext
+LoginPresenter <.. LoginPresenter1 : ext
+AuthenticationInteractor <.. AuthenticationInteractor2 : ext
+@enduml

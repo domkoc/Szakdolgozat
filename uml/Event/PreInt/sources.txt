@@ -1,0 +1,191 @@
+@startuml
+' STYLE START
+hide empty members
+skinparam shadowing false
+' STYLE END
+
+
+class "SubEventsPresenterInput" as SubEventsPresenterInput << (P, GoldenRod) protocol >> { 
+  ~view : SubEventsView?
+  ~interactor : EventsInteractorInput
+  ~presentationModel : SubEventsPresentationModel?
+  ~loadData()
+  ~navigateToSubEvent(_:)
+  ~navigateToNewSubEvent() 
+}
+class "SubEventsPresenter" as SubEventsPresenter << (C, DarkSeaGreen) >> { 
+  ~view : SubEventsView?
+  ~interactor : EventsInteractorInput
+  -coordinator : EventsCoordinatorInput
+  -parentEvent : Event
+  ~presentationModel : SubEventsPresentationModel?
+  ~init(view:interactor:coordinator:parentEvent:) 
+}
+class "SubEventsPresenter" as SubEventsPresenter0 << (X, Orchid) extension >> { 
+  loadData()
+  navigateToSubEvent(_:)
+  navigateToNewSubEvent() 
+}
+class "EventsInteractorSuccess" as EventsInteractorSuccess << (S, SkyBlue) struct >> {  
+}
+class "EventsInteractorError" as EventsInteractorError << (E, LightSteelBlue) enum >> { 
+  ~error(_:) 
+}
+class "EventsInteractorInput" as EventsInteractorInput << (P, GoldenRod) protocol >> { 
+  ~getEvents(completion:)
+  ~createNewEvent(newEvent:completion:)
+  ~getProfileById(id:completion:)
+  ~getEventsByUserId(id:completion:)
+  ~getEventApplicationState(event:completion:)
+  ~applyToEvent(event:completion:)
+  ~toggleEventAppliability(event:completion:)
+  ~getApplicantsByEvent(id:completion:)
+  ~getWorkersByEvent(id:completion:)
+  ~acceptApplication(userid:eventid:completion:)
+  ~getSubEvents(of:completion:)
+  ~createNewSubEvent(for:newEvent:completion:)
+  ~uploadEventPicture(_:for:completion:)
+  ~getEventImage(of:completion:) 
+}
+class "EventsInteractor" as EventsInteractor << (C, DarkSeaGreen) >> { 
+  -eventApi : EventAPIInput
+  -profileApi : ProfileAPIInput
+  ~init(eventApi:profileApi:) 
+}
+class "EventsInteractor" as EventsInteractor1 << (X, Orchid) extension >> { 
+  getEvents(completion:)
+  createNewEvent(newEvent:completion:)
+  getProfileById(id:completion:)
+  getEventsByUserId(id:completion:)
+  getEventApplicationState(event:completion:)
+  applyToEvent(event:completion:)
+  toggleEventAppliability(event:completion:)
+  getApplicantsByEvent(id:completion:)
+  getWorkersByEvent(id:completion:)
+  acceptApplication(userid:eventid:completion:)
+  getSubEvents(of:completion:)
+  createNewSubEvent(for:newEvent:completion:)
+  uploadEventPicture(_:for:completion:)
+  getEventImage(of:completion:) 
+}
+class "AllEventsPresenterInput" as AllEventsPresenterInput << (P, GoldenRod) protocol >> { 
+  ~view : AllEventsView?
+  ~interactor : EventsInteractorInput
+  ~presentationModel : AllEventsPresentationModel?
+  ~loadEventsData()
+  ~navigateToNewEvent()
+  ~navigateToEvent(index:)
+  ~isUsersEvents() 
+}
+class "AllEventsPresenter" as AllEventsPresenter << (C, DarkSeaGreen) >> { 
+  ~view : AllEventsView?
+  ~interactor : EventsInteractorInput
+  -coordinator : EventsCoordinatorInput
+  ~presentationModel : AllEventsPresentationModel?
+  -userid : UUID?
+  ~init(view:interactor:coordinator:userid:) 
+}
+class "AllEventsPresenter" as AllEventsPresenter2 << (X, Orchid) extension >> { 
+  loadEventsData()
+  navigateToNewEvent()
+  navigateToEvent(index:)
+  isUsersEvents() 
+}
+class "EventApplicantsPresenterInput" as EventApplicantsPresenterInput << (P, GoldenRod) protocol >> { 
+  ~view : EventApplicantsView?
+  ~interactor : EventsInteractorInput
+  ~presentationModel : EventApplicantsPresentationModel?
+  ~loadData()
+  ~navigateToProfile(of:)
+  ~acceptApplicant(_:)
+  ~isOrganizer() 
+}
+class "EventApplicantsPresenter" as EventApplicantsPresenter << (C, DarkSeaGreen) >> { 
+  -errors : [String]
+  ~view : EventApplicantsView?
+  ~interactor : EventsInteractorInput
+  -coordinator : EventsCoordinatorInput
+  -event : Event
+  ~presentationModel : EventApplicantsPresentationModel?
+  ~init(view:interactor:coordinator:event:) 
+}
+class "EventApplicantsPresenter" as EventApplicantsPresenter3 << (X, Orchid) extension >> { 
+  loadData()
+  -loadApplicants(_:)
+  -loadWorkers(_:)
+  navigateToProfile(of:)
+  acceptApplicant(_:)
+  isOrganizer() 
+}
+class "NewEventPresenterInput" as NewEventPresenterInput << (P, GoldenRod) protocol >> { 
+  ~view : NewEventView?
+  ~interactor : EventsInteractorInput
+  ~presentationModel : NewEventPresentationModel?
+  ~saveNewEvent(_:) 
+}
+class "NewEventPresenter" as NewEventPresenter << (C, DarkSeaGreen) >> { 
+  ~view : NewEventView?
+  ~interactor : EventsInteractorInput
+  -coordinator : EventsCoordinatorInput
+  ~presentationModel : NewEventPresentationModel?
+  -mainEvent : Event?
+  ~init(view:interactor:coordinator:mainEvent:) 
+}
+class "NewEventPresenter" as NewEventPresenter4 << (X, Orchid) extension >> { 
+  saveNewEvent(_:) 
+}
+class "EventDetailsPresenterInput" as EventDetailsPresenterInput << (P, GoldenRod) protocol >> { 
+  ~view : EventDetailsView?
+  ~interactor : EventsInteractorInput
+  ~presentationModel : EventDetailsPresentationModel
+  ~loadEventData()
+  ~navigateToOrganizerProfile()
+  ~applyToEvent()
+  ~toggleAppliability()
+  ~isOrganizer()
+  ~navigateToEventApplications()
+  ~navigateToSubEvents()
+  ~uploadEventPicture(_:)
+  ~loadImage() 
+}
+class "EventDetailsPresenter" as EventDetailsPresenter << (C, DarkSeaGreen) >> { 
+  -errors : [String]
+  ~view : EventDetailsView?
+  ~interactor : EventsInteractorInput
+  -coordinator : EventsCoordinatorInput
+  ~presentationModel : EventDetailsPresentationModel
+  ~init(view:interactor:coordinator:presentationModel:) 
+}
+class "EventDetailsPresenter" as EventDetailsPresenter5 << (X, Orchid) extension >> { 
+  loadEventData()
+  -loadOrganizer(_:)
+  -loadApplicationState(_:)
+  navigateToOrganizerProfile()
+  applyToEvent()
+  toggleAppliability()
+  isOrganizer()
+  navigateToEventApplications()
+  navigateToSubEvents()
+  uploadEventPicture(_:)
+  loadImage() 
+}
+AnyObject <|.. SubEventsPresenterInput : inherits
+SubEventsPresenterInput <|.. SubEventsPresenter : confirms to
+Error -- EventsInteractorError : inherits
+AnyObject <|.. EventsInteractorInput : inherits
+EventsInteractorInput <|.. EventsInteractor : confirms to
+AnyObject <|.. AllEventsPresenterInput : inherits
+AllEventsPresenterInput <|.. AllEventsPresenter : confirms to
+AnyObject <|.. EventApplicantsPresenterInput : inherits
+EventApplicantsPresenterInput <|.. EventApplicantsPresenter : confirms to
+AnyObject <|.. NewEventPresenterInput : inherits
+NewEventPresenterInput <|.. NewEventPresenter : confirms to
+AnyObject <|.. EventDetailsPresenterInput : inherits
+EventDetailsPresenterInput <|.. EventDetailsPresenter : confirms to
+SubEventsPresenter <.. SubEventsPresenter0 : ext
+EventsInteractor <.. EventsInteractor1 : ext
+AllEventsPresenter <.. AllEventsPresenter2 : ext
+EventApplicantsPresenter <.. EventApplicantsPresenter3 : ext
+NewEventPresenter <.. NewEventPresenter4 : ext
+EventDetailsPresenter <.. EventDetailsPresenter5 : ext
+@enduml

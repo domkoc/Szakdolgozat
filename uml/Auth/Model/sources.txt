@@ -1,0 +1,22 @@
+@startuml
+' STYLE START
+hide empty members
+skinparam shadowing false
+' STYLE END
+
+
+class "Login" as Login << (S, SkyBlue) struct >> { 
+  ~email : String
+  ~password : String 
+}
+class "SSSLAuthCredentials" as SSSLAuthCredentials << (S, SkyBlue) struct >> { 
+  ~{static} maxMinutesTillExpiration : TimeInterval
+  ~token : String
+  ~expiration : Date?
+  ~requiresRefresh : Bool
+  ~init(token:)
+  ~setExpiration(_:) 
+}
+AuthenticationCredential <|-- SSSLAuthCredentials : inherits
+
+@enduml

@@ -1,0 +1,39 @@
+@startuml
+' STYLE START
+hide empty members
+skinparam shadowing false
+' STYLE END
+
+
+class "EventDownloadDto" as EventDownloadDto << (S, SkyBlue) struct >> { 
+  ~id : UUID
+  ~organizer : UUID
+  ~title : String
+  ~description : String
+  ~start_date : Double
+  ~end_date : Double
+  ~location : String
+  ~is_applyable : Bool
+  ~application_start : Double?
+  ~application_end : Double?
+  ~parent_event : UUID? 
+}
+class "NewEventUploadDto" as NewEventUploadDto << (S, SkyBlue) struct >> { 
+  ~title : String
+  ~description : String
+  ~startDate : Double
+  ~endDate : Double
+  ~location : String 
+}
+class "EventApplicationStateDto" as EventApplicationStateDto << (S, SkyBlue) struct >> { 
+  ~did_apply : Bool 
+}
+class "EventPictureUploadDto" as EventPictureUploadDto << (S, SkyBlue) struct >> { 
+  ~image : Data 
+}
+Decodable <|-- EventDownloadDto : inherits
+Encodable <|-- NewEventUploadDto : inherits
+Decodable <|-- EventApplicationStateDto : inherits
+Encodable <|-- EventPictureUploadDto : inherits
+
+@enduml

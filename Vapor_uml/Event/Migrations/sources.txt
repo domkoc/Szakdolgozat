@@ -1,0 +1,24 @@
+@startuml
+' STYLE START
+hide empty members
+skinparam shadowing false
+' STYLE END
+
+
+class "CreateEvent" as CreateEvent << (S, SkyBlue) struct >> { 
+  ~prepare(on:)
+  ~revert(on:) 
+}
+class "CreateEventWorkersPivot" as CreateEventWorkersPivot << (S, SkyBlue) struct >> { 
+  ~prepare(on:)
+  ~revert(on:) 
+}
+class "CreateEventApplicantsPivot" as CreateEventApplicantsPivot << (S, SkyBlue) struct >> { 
+  ~prepare(on:)
+  ~revert(on:) 
+}
+Migration <|-- CreateEvent : inherits
+Migration <|-- CreateEventWorkersPivot : inherits
+Migration <|-- CreateEventApplicantsPivot : inherits
+
+@enduml

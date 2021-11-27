@@ -1,0 +1,118 @@
+@startuml
+' STYLE START
+hide empty members
+skinparam shadowing false
+' STYLE END
+
+
+class "CreateEvent" as CreateEvent << (S, SkyBlue) struct >> { 
+  ~prepare(on:)
+  ~revert(on:) 
+}
+class "CreateEventWorkersPivot" as CreateEventWorkersPivot << (S, SkyBlue) struct >> { 
+  ~prepare(on:)
+  ~revert(on:) 
+}
+class "CreateEventApplicantsPivot" as CreateEventApplicantsPivot << (S, SkyBlue) struct >> { 
+  ~prepare(on:)
+  ~revert(on:) 
+}
+class "EventWorkersPivot" as EventWorkersPivot << (C, DarkSeaGreen) >> { 
+  ~{static} schema
+  ~id : UUID?
+  ~event : Event
+  ~user : User
+  ~init()
+  ~init(id:event:user:) 
+}
+class "Event" as Event << (C, DarkSeaGreen) >> { 
+  ~{static} schema
+  ~id : UUID?
+  ~organizer : User
+  ~title : String
+  ~image : String?
+  ~description : String
+  ~startDate : Date
+  ~endDate : Date
+  ~location : String
+  ~isApplyable : Bool
+  ~applicationStart : Date?
+  ~applicationEnd : Date?
+  ~applicants : [User]
+  ~workers : [User]
+  ~parentEvent : Event?
+  ~subEvents : [Event]
+  ~init()
+  ~init(id:organizer:title:description:startDate:endDate:location:isApplyable:applicationStart:applicationEnd:parentEvent:)
+  ~{static} create(from:organizer:) 
+}
+class "Event" as Event0 << (X, Orchid) extension >> { 
+  asPublic()
+  isMain() 
+}
+class "EventLoopFuture" as EventLoopFuture << (X, Orchid) extension >> { 
+  asPublic() 
+}
+class "Collection" as Collection << (X, Orchid) extension >> { 
+  asPublic()
+  onlyMainEvents() 
+}
+class "EventLoopFuture" as EventLoopFuture1 << (X, Orchid) extension >> { 
+  asPublic() 
+}
+class "EventApplicantsPivot" as EventApplicantsPivot << (C, DarkSeaGreen) >> { 
+  ~{static} schema
+  ~id : UUID?
+  ~event : Event
+  ~user : User
+  ~init()
+  ~init(id:event:user:) 
+}
+class "EventError" as EventError << (E, LightSteelBlue) enum >> { 
+  ~eventTitleTaken
+  ~notApplyable 
+}
+class "EventError" as EventError2 << (X, Orchid) extension >> { 
+  description : String
+  status : HTTPResponseStatus
+  reason : String 
+}
+class "NewEvent" as NewEvent << (S, SkyBlue) struct >> { 
+  ~title : String
+  ~description : String
+  ~startDate : Double
+  ~endDate : Double
+  ~location : String 
+}
+class "NewEvent" as NewEvent3 << (X, Orchid) extension >> { 
+  {static} validations(_:) 
+}
+class "EventApplicationState" as EventApplicationState << (S, SkyBlue) struct >> { 
+  ~didApply : Bool 
+}
+class "NewEventImageUpload" as NewEventImageUpload << (S, SkyBlue) struct >> { 
+  ~image : Data 
+}
+class "EventController" as EventController << (S, SkyBlue) struct >> { 
+  ~imageFolder
+  ~boot(routes:)
+  -checkIfExists(_:req:) 
+}
+Migration <|-- CreateEvent : inherits
+Migration <|-- CreateEventWorkersPivot : inherits
+Migration <|-- CreateEventApplicantsPivot : inherits
+Model <|-- EventWorkersPivot : inherits
+Model <|-- Event : inherits
+Content <|-- Event : inherits
+Model <|-- EventApplicantsPivot : inherits
+AbortError -- EventError : inherits
+Content <|-- NewEvent : inherits
+Validatable <|-- NewEvent : inherits
+Content <|-- EventApplicationState : inherits
+Content <|-- NewEventImageUpload : inherits
+RouteCollection <|-- EventController : inherits
+Event <.. Event0 : ext
+EventLoopFuture <.. EventLoopFuture1 : ext
+EventError <.. EventError2 : ext
+NewEvent <.. NewEvent3 : ext
+@enduml

@@ -1,0 +1,75 @@
+@startuml
+' STYLE START
+hide empty members
+skinparam shadowing false
+' STYLE END
+
+
+class "RegisterPresentationModel" as RegisterPresentationModel << (S, SkyBlue) struct >> { 
+  ~profileUploadDto : ProfileUploadDto 
+}
+class "RegisterView" as RegisterView << (P, GoldenRod) protocol >> { 
+  ~presenter : RegisterPresenterInput?
+  ~enableRegisterButton() 
+}
+class "RegisterViewController" as RegisterViewController << (C, DarkSeaGreen) >> { 
+  ~registerButton : UIButton!
+  ~emailTextField : UITextField!
+  ~passwordTextField : UITextField!
+  ~fullNameTextField : UITextField!
+  ~groupTextField : UITextField!
+  ~nicknameTextField : UITextField!
+  -schGroupPicker
+  ~presenter : RegisterPresenterInput?
+  ~viewDidLoad()
+  -customizeViews()
+  -customizeTextFields()
+  -customizePicker()
+  ~registerButtonTapped(_:)
+  -verifyInputs() 
+}
+class "RegisterViewController" as RegisterViewController0 << (X, Orchid) extension >> { 
+  enableRegisterButton() 
+}
+class "RegisterViewController" as RegisterViewController1 << (X, Orchid) extension >> { 
+  numberOfComponents(in:)
+  pickerView(_:numberOfRowsInComponent:)
+  pickerView(_:titleForRow:forComponent:) 
+}
+class "RegisterViewController" as RegisterViewController2 << (X, Orchid) extension >> { 
+  pickerView(_:didSelectRow:inComponent:) 
+}
+class "LoginView" as LoginView << (P, GoldenRod) protocol >> { 
+  ~presenter : LoginPresenterInput?
+  ~credentials() 
+}
+class "LoginViewController" as LoginViewController << (C, DarkSeaGreen) >> { 
+  ~emailTextField : UITextField!
+  ~passwordTextField : UITextField!
+  ~loginButton : UIButton!
+  ~presenter : LoginPresenterInput?
+  ~viewDidLoad()
+  -customizeViews()
+  ~registerButtonTapped(_:)
+  ~loginButtonTapped(_:) 
+}
+class "LoginViewController" as LoginViewController3 << (X, Orchid) extension >> { 
+  credentials() 
+}
+class "LoginPresentationModel" as LoginPresentationModel << (S, SkyBlue) struct >> { 
+  ~email : String
+  ~password : String 
+}
+BaseView <|.. RegisterView : inherits
+UIViewController <|-- RegisterViewController : inherits
+RegisterView <|.. RegisterViewController : confirms to
+UIPickerViewDataSource <|-- RegisterViewController : inherits
+UIPickerViewDelegate <|-- RegisterViewController : inherits
+BaseView <|.. LoginView : inherits
+UIViewController <|-- LoginViewController : inherits
+LoginView <|.. LoginViewController : confirms to
+RegisterViewController <.. RegisterViewController0 : ext
+RegisterViewController <.. RegisterViewController1 : ext
+RegisterViewController <.. RegisterViewController2 : ext
+LoginViewController <.. LoginViewController3 : ext
+@enduml

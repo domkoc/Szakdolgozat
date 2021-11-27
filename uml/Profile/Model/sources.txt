@@ -1,0 +1,32 @@
+@startuml
+' STYLE START
+hide empty members
+skinparam shadowing false
+' STYLE END
+
+
+class "Profile" as Profile << (S, SkyBlue) struct >> { 
+  ~username : String
+  ~id : UUID
+  ~fullname : String?
+  ~nickname : String?
+  ~schgroup : SCHgroup?
+  ~roles : [Roles]
+  ~createdAt : Date?
+  ~updatedAt : Date?
+  ~init(username:id:fullname:nickname:schgroup:roles:createdAt:updatedAt:)
+  ~init(dto:)
+  ~getRepresentableValues()
+  ~fieldsCount() 
+}
+class "EditedProfileCredentials" as EditedProfileCredentials << (S, SkyBlue) struct >> { 
+  ~id : UUID
+  ~email : String
+  ~fullname : String
+  ~group : SCHgroup?
+  ~nickname : String?
+  ~dto : ProfileEditDto 
+}
+
+
+@enduml

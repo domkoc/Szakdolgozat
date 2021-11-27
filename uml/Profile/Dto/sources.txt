@@ -1,0 +1,49 @@
+@startuml
+' STYLE START
+hide empty members
+skinparam shadowing false
+' STYLE END
+
+
+class "SCHgroup" as SCHgroup << (E, LightSteelBlue) enum >> { 
+  ~sir
+  ~nyuszi
+  ~ttny
+  ~drwu
+  ~fekete
+  ~stringValue : String 
+}
+class "Roles" as Roles << (E, LightSteelBlue) enum >> { 
+  ~user
+  ~admin 
+}
+class "ProfileDownloadDto" as ProfileDownloadDto << (S, SkyBlue) struct >> { 
+  ~username : String?
+  ~id : UUID?
+  ~fullname : String
+  ~nickname : String?
+  ~schgroup : SCHgroup?
+  ~roles : [Roles]
+  ~created_at : Double?
+  ~updated_at : Double? 
+}
+class "ProfileUploadDto" as ProfileUploadDto << (S, SkyBlue) struct >> { 
+  ~username : String
+  ~password : String
+  ~fullname : String
+  ~nickname : String?
+  ~schgroup : SCHgroup? 
+}
+class "ProfilePictureUploadDto" as ProfilePictureUploadDto << (S, SkyBlue) struct >> { 
+  ~image : Data 
+}
+String -- SCHgroup : inherits
+Codable -- SCHgroup : inherits
+CaseIterable -- SCHgroup : inherits
+String -- Roles : inherits
+Decodable -- Roles : inherits
+Decodable <|-- ProfileDownloadDto : inherits
+Encodable <|-- ProfileUploadDto : inherits
+Encodable <|-- ProfilePictureUploadDto : inherits
+
+@enduml

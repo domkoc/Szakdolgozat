@@ -1,0 +1,278 @@
+@startuml
+' STYLE START
+hide empty members
+skinparam shadowing false
+' STYLE END
+
+
+class "SCHgroup" as SCHgroup << (E, LightSteelBlue) enum >> { 
+  ~sir
+  ~nyuszi
+  ~ttny
+  ~drwu
+  ~fekete
+  ~stringValue : String 
+}
+class "Roles" as Roles << (E, LightSteelBlue) enum >> { 
+  ~user
+  ~admin 
+}
+class "ProfileDownloadDto" as ProfileDownloadDto << (S, SkyBlue) struct >> { 
+  ~username : String?
+  ~id : UUID?
+  ~fullname : String
+  ~nickname : String?
+  ~schgroup : SCHgroup?
+  ~roles : [Roles]
+  ~created_at : Double?
+  ~updated_at : Double? 
+}
+class "ProfileUploadDto" as ProfileUploadDto << (S, SkyBlue) struct >> { 
+  ~username : String
+  ~password : String
+  ~fullname : String
+  ~nickname : String?
+  ~schgroup : SCHgroup? 
+}
+class "ProfileEditDto" as ProfileEditDto << (S, SkyBlue) struct >> { 
+  ~id : UUID
+  ~username : String
+  ~fullname : String
+  ~nickname : String?
+  ~schgroup : SCHgroup? 
+}
+class "ProfilePictureUploadDto" as ProfilePictureUploadDto << (S, SkyBlue) struct >> { 
+  ~image : Data 
+}
+class "Profile" as Profile << (S, SkyBlue) struct >> { 
+  ~username : String
+  ~id : UUID
+  ~fullname : String?
+  ~nickname : String?
+  ~schgroup : SCHgroup?
+  ~roles : [Roles]
+  ~createdAt : Date?
+  ~updatedAt : Date?
+  ~init(username:id:fullname:nickname:schgroup:roles:createdAt:updatedAt:)
+  ~init(dto:)
+  ~getRepresentableValues()
+  ~fieldsCount() 
+}
+class "EditedProfileCredentials" as EditedProfileCredentials << (S, SkyBlue) struct >> { 
+  ~id : UUID
+  ~email : String
+  ~fullname : String
+  ~group : SCHgroup?
+  ~nickname : String?
+  ~dto : ProfileEditDto 
+}
+class "ProfileAPIInput" as ProfileAPIInput << (P, GoldenRod) protocol >> { 
+  ~getProfile(completion:)
+  ~editProfile(with:completion:)
+  ~getProfilebyId(with:completion:)
+  ~uploadProfilePicture(_:progressCompletion:completion:)
+  ~getProfilePicture(of:completion:) 
+}
+class "ProfileAPI" as ProfileAPI << (C, DarkSeaGreen) >> {  
+}
+class "ProfileAPI" as ProfileAPI0 << (X, Orchid) extension >> { 
+  getProfile(completion:)
+  editProfile(with:completion:)
+  getProfilebyId(with:completion:)
+  uploadProfilePicture(_:progressCompletion:completion:)
+  getProfilePicture(of:completion:) 
+}
+class "EditProfilePresentationModel" as EditProfilePresentationModel << (S, SkyBlue) struct >> { 
+  ~profile : Profile 
+}
+class "EditProfileView" as EditProfileView << (P, GoldenRod) protocol >> { 
+  ~presenter : EditProfilePresenterInput?
+  ~enableSaveButton() 
+}
+class "EditProfileViewController" as EditProfileViewController << (C, DarkSeaGreen) >> { 
+  ~saveButton : UIButton!
+  ~emailTextField : UITextField!
+  ~fullNameTextField : UITextField!
+  ~groupTextField : UITextField!
+  ~nicknameTextField : UITextField!
+  -schGroupPicker
+  ~presenter : EditProfilePresenterInput?
+  ~viewDidLoad()
+  -customizeViews()
+  -customizeTextFields()
+  -customizePicker()
+  ~saveButtonTapped(_:)
+  -verifyInputs() 
+}
+class "EditProfileViewController" as EditProfileViewController1 << (X, Orchid) extension >> { 
+  enableSaveButton() 
+}
+class "EditProfileViewController" as EditProfileViewController2 << (X, Orchid) extension >> { 
+  numberOfComponents(in:)
+  pickerView(_:numberOfRowsInComponent:)
+  pickerView(_:titleForRow:forComponent:) 
+}
+class "EditProfileViewController" as EditProfileViewController3 << (X, Orchid) extension >> { 
+  pickerView(_:didSelectRow:inComponent:) 
+}
+class "EditProfilePresenterInput" as EditProfilePresenterInput << (P, GoldenRod) protocol >> { 
+  ~view : EditProfileView?
+  ~interactor : ProfileInteractorInput
+  ~saveChanges(with:)
+  ~getIdOfUser()
+  ~getPresentationModel() 
+}
+class "EditProfilePresenter" as EditProfilePresenter << (C, DarkSeaGreen) >> { 
+  ~view : EditProfileView?
+  ~interactor : ProfileInteractorInput
+  -coordinator : ProfileCoordinator
+  -presentationModel : EditProfilePresentationModel
+  ~init(coordinator:interactor:view:presentationModel:) 
+}
+class "EditProfilePresenter" as EditProfilePresenter4 << (X, Orchid) extension >> { 
+  saveChanges(with:)
+  getIdOfUser()
+  getPresentationModel() 
+}
+class "ProfileCoordinatorInput" as ProfileCoordinatorInput << (P, GoldenRod) protocol >> { 
+  ~navigateToEditProfile(with:)
+  ~navigateToMainScreen()
+  ~navigateToEventsOf(_:) 
+}
+class "ProfileCoordinator" as ProfileCoordinator << (C, DarkSeaGreen) >> { 
+  -rootViewController : UINavigationController?
+  -appCoordinator : AppCoordinator?
+  -profileApi : ProfileAPIInput
+  -interactor : ProfileInteractorInput
+  ~init(rootViewController:appCoordinator:)
+  ~start(with:) 
+}
+class "ProfileCoordinator" as ProfileCoordinator5 << (X, Orchid) extension >> { 
+  navigateToEditProfile(with:)
+  navigateToMainScreen()
+  navigateToEventsOf(_:) 
+}
+class "ProfileViewControllerFactory" as ProfileViewControllerFactory << (C, DarkSeaGreen) >> {  
+}
+class "UserProfileView" as UserProfileView << (P, GoldenRod) protocol >> { 
+  ~presenter : UserProfilePresenterInput?
+  ~updateImage(_:) 
+}
+class "UserProfileViewController" as UserProfileViewController << (C, DarkSeaGreen) >> { 
+  ~profilePictureImageView : UIImageView!
+  ~userDetailsTableView : UITableView!
+  ~editButtonHeightConstraint : NSLayoutConstraint!
+  ~editButtonTopConstraint : NSLayoutConstraint!
+  ~editButton : UIButton!
+  ~presenter : UserProfilePresenterInput?
+  ~viewDidLoad()
+  ~viewDidAppear(_:)
+  -customizeViews()
+  -customizeImageView()
+  -customizeTableView()
+  -customizeEditButton()
+  ~editButtonTapped(_:)
+  ~usersEventsButtonTapped(_:)
+  ~profileImageLongPressed(_:)
+  -imageSelected(_:) 
+}
+class "UserProfileViewController" as UserProfileViewController6 << (X, Orchid) extension >> { 
+  updateImage(_:) 
+}
+class "UserProfileViewController" as UserProfileViewController7 << (X, Orchid) extension >> { 
+  tableView(_:numberOfRowsInSection:)
+  tableView(_:cellForRowAt:) 
+}
+class "UserProfileViewController" as UserProfileViewController8 << (X, Orchid) extension >> { 
+  imagePickerController(_:didFinishPickingMediaWithInfo:)
+  imagePickerControllerDidCancel(_:) 
+}
+class "UserProfilePresenterInput" as UserProfilePresenterInput << (P, GoldenRod) protocol >> { 
+  ~view : UserProfileView?
+  ~interactor : ProfileInteractorInput
+  ~presentationModel : UserProfilePresentationModel
+  ~navigateToEditProfile()
+  ~isMyProfile()
+  ~navigateToUsersEvents()
+  ~uploadProfilePicture(_:)
+  ~loadPicture() 
+}
+class "UserProfilePresenter" as UserProfilePresenter << (C, DarkSeaGreen) >> { 
+  ~view : UserProfileView?
+  ~interactor : ProfileInteractorInput
+  -coordinator : ProfileCoordinatorInput
+  ~presentationModel : UserProfilePresentationModel
+  ~init(coordinator:interactor:view:presentationModel:) 
+}
+class "UserProfilePresenter" as UserProfilePresenter9 << (X, Orchid) extension >> { 
+  navigateToEditProfile()
+  isMyProfile()
+  navigateToUsersEvents()
+  uploadProfilePicture(_:)
+  loadPicture() 
+}
+class "UserProfilePresentationModel" as UserProfilePresentationModel << (S, SkyBlue) struct >> { 
+  ~profile : Profile 
+}
+class "ProfileInteractorSuccess" as ProfileInteractorSuccess << (S, SkyBlue) struct >> {  
+}
+class "ProfileInteractorError" as ProfileInteractorError << (E, LightSteelBlue) enum >> { 
+  ~error(_:) 
+}
+class "ProfileInteractorInput" as ProfileInteractorInput << (P, GoldenRod) protocol >> { 
+  ~saveProfile(credentials:completion:)
+  ~uploadProfilePicture(_:completion:)
+  ~getProfileImage(of:completion:) 
+}
+class "ProfileInteractor" as ProfileInteractor << (C, DarkSeaGreen) >> { 
+  -profileApi : ProfileAPIInput
+  ~init(profileApi:) 
+}
+class "ProfileInteractor" as ProfileInteractor10 << (X, Orchid) extension >> { 
+  saveProfile(credentials:completion:)
+  uploadProfilePicture(_:completion:)
+  getProfileImage(of:completion:) 
+}
+String -- SCHgroup : inherits
+Codable -- SCHgroup : inherits
+CaseIterable -- SCHgroup : inherits
+String -- Roles : inherits
+Decodable -- Roles : inherits
+Decodable <|-- ProfileDownloadDto : inherits
+Encodable <|-- ProfileUploadDto : inherits
+Encodable <|-- ProfileEditDto : inherits
+Encodable <|-- ProfilePictureUploadDto : inherits
+Decodable <|-- Profile : inherits
+APIBase <|-- ProfileAPI : inherits
+ProfileAPIInput <|.. ProfileAPI : confirms to
+BaseView <|.. EditProfileView : inherits
+UIViewController <|-- EditProfileViewController : inherits
+EditProfileView <|.. EditProfileViewController : confirms to
+UIPickerViewDataSource <|-- EditProfileViewController : inherits
+UIPickerViewDelegate <|-- EditProfileViewController : inherits
+AnyObject <|.. EditProfilePresenterInput : inherits
+EditProfilePresenterInput <|.. EditProfilePresenter : confirms to
+ProfileCoordinatorInput <|.. ProfileCoordinator : confirms to
+BaseView <|.. UserProfileView : inherits
+UIViewController <|-- UserProfileViewController : inherits
+UserProfileView <|.. UserProfileViewController : confirms to
+UITableViewDataSource <|-- UserProfileViewController : inherits
+UIImagePickerControllerDelegate <|-- UserProfileViewController : inherits
+UINavigationControllerDelegate <|-- UserProfileViewController : inherits
+AnyObject <|.. UserProfilePresenterInput : inherits
+UserProfilePresenterInput <|.. UserProfilePresenter : confirms to
+Error -- ProfileInteractorError : inherits
+AnyObject <|.. ProfileInteractorInput : inherits
+ProfileInteractorInput <|.. ProfileInteractor : confirms to
+ProfileAPI <.. ProfileAPI0 : ext
+EditProfileViewController <.. EditProfileViewController1 : ext
+EditProfileViewController <.. EditProfileViewController2 : ext
+EditProfileViewController <.. EditProfileViewController3 : ext
+EditProfilePresenter <.. EditProfilePresenter4 : ext
+ProfileCoordinator <.. ProfileCoordinator5 : ext
+UserProfileViewController <.. UserProfileViewController6 : ext
+UserProfileViewController <.. UserProfileViewController7 : ext
+UserProfileViewController <.. UserProfileViewController8 : ext
+UserProfilePresenter <.. UserProfilePresenter9 : ext
+ProfileInteractor <.. ProfileInteractor10 : ext
+@enduml

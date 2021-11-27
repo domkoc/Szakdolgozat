@@ -1,0 +1,94 @@
+@startuml
+' STYLE START
+hide empty members
+skinparam shadowing false
+' STYLE END
+
+
+class "EditProfilePresentationModel" as EditProfilePresentationModel << (S, SkyBlue) struct >> { 
+  ~profile : Profile 
+}
+class "EditProfileView" as EditProfileView << (P, GoldenRod) protocol >> { 
+  ~presenter : EditProfilePresenterInput?
+  ~enableSaveButton() 
+}
+class "EditProfileViewController" as EditProfileViewController << (C, DarkSeaGreen) >> { 
+  ~saveButton : UIButton!
+  ~emailTextField : UITextField!
+  ~fullNameTextField : UITextField!
+  ~groupTextField : UITextField!
+  ~nicknameTextField : UITextField!
+  -schGroupPicker
+  ~presenter : EditProfilePresenterInput?
+  ~viewDidLoad()
+  -customizeViews()
+  -customizeTextFields()
+  -customizePicker()
+  ~saveButtonTapped(_:)
+  -verifyInputs() 
+}
+class "EditProfileViewController" as EditProfileViewController0 << (X, Orchid) extension >> { 
+  enableSaveButton() 
+}
+class "EditProfileViewController" as EditProfileViewController1 << (X, Orchid) extension >> { 
+  numberOfComponents(in:)
+  pickerView(_:numberOfRowsInComponent:)
+  pickerView(_:titleForRow:forComponent:) 
+}
+class "EditProfileViewController" as EditProfileViewController2 << (X, Orchid) extension >> { 
+  pickerView(_:didSelectRow:inComponent:) 
+}
+class "UserProfileView" as UserProfileView << (P, GoldenRod) protocol >> { 
+  ~presenter : UserProfilePresenterInput?
+  ~updateImage(_:) 
+}
+class "UserProfileViewController" as UserProfileViewController << (C, DarkSeaGreen) >> { 
+  ~profilePictureImageView : UIImageView!
+  ~userDetailsTableView : UITableView!
+  ~editButtonHeightConstraint : NSLayoutConstraint!
+  ~editButtonTopConstraint : NSLayoutConstraint!
+  ~editButton : UIButton!
+  ~presenter : UserProfilePresenterInput?
+  ~viewDidLoad()
+  ~viewDidAppear(_:)
+  -customizeViews()
+  -customizeImageView()
+  -customizeTableView()
+  -customizeEditButton()
+  ~editButtonTapped(_:)
+  ~usersEventsButtonTapped(_:)
+  ~profileImageLongPressed(_:)
+  -imageSelected(_:) 
+}
+class "UserProfileViewController" as UserProfileViewController3 << (X, Orchid) extension >> { 
+  updateImage(_:) 
+}
+class "UserProfileViewController" as UserProfileViewController4 << (X, Orchid) extension >> { 
+  tableView(_:numberOfRowsInSection:)
+  tableView(_:cellForRowAt:) 
+}
+class "UserProfileViewController" as UserProfileViewController5 << (X, Orchid) extension >> { 
+  imagePickerController(_:didFinishPickingMediaWithInfo:)
+  imagePickerControllerDidCancel(_:) 
+}
+class "UserProfilePresentationModel" as UserProfilePresentationModel << (S, SkyBlue) struct >> { 
+  ~profile : Profile 
+}
+BaseView <|.. EditProfileView : inherits
+UIViewController <|-- EditProfileViewController : inherits
+EditProfileView <|.. EditProfileViewController : confirms to
+UIPickerViewDataSource <|-- EditProfileViewController : inherits
+UIPickerViewDelegate <|-- EditProfileViewController : inherits
+BaseView <|.. UserProfileView : inherits
+UIViewController <|-- UserProfileViewController : inherits
+UserProfileView <|.. UserProfileViewController : confirms to
+UITableViewDataSource <|-- UserProfileViewController : inherits
+UIImagePickerControllerDelegate <|-- UserProfileViewController : inherits
+UINavigationControllerDelegate <|-- UserProfileViewController : inherits
+EditProfileViewController <.. EditProfileViewController0 : ext
+EditProfileViewController <.. EditProfileViewController1 : ext
+EditProfileViewController <.. EditProfileViewController2 : ext
+UserProfileViewController <.. UserProfileViewController3 : ext
+UserProfileViewController <.. UserProfileViewController4 : ext
+UserProfileViewController <.. UserProfileViewController5 : ext
+@enduml

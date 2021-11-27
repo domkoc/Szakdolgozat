@@ -1,0 +1,38 @@
+@startuml
+' STYLE START
+hide empty members
+skinparam shadowing false
+' STYLE END
+
+
+class "CreateTokens" as CreateTokens << (S, SkyBlue) struct >> { 
+  ~prepare(on:)
+  ~revert(on:) 
+}
+class "SessionSource" as SessionSource << (E, LightSteelBlue) enum >> { 
+  ~signup
+  ~login 
+}
+class "Token" as Token << (C, DarkSeaGreen) >> { 
+  ~{static} schema
+  ~id : UUID?
+  ~user : User
+  ~value : String
+  ~source : SessionSource
+  ~expiresAt : Date?
+  ~createdAt : Date?
+  ~init()
+  ~init(id:userId:token:source:expiresAt:) 
+}
+class "Token" as Token0 << (X, Orchid) extension >> { 
+  {static} valueKey
+  {static} userKey
+  isValid : Bool 
+}
+Migration <|-- CreateTokens : inherits
+Int -- SessionSource : inherits
+Content -- SessionSource : inherits
+Model <|-- Token : inherits
+ModelTokenAuthenticatable <|-- Token : inherits
+Token <.. Token0 : ext
+@enduml

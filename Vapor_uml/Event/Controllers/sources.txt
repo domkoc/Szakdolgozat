@@ -1,0 +1,35 @@
+@startuml
+' STYLE START
+hide empty members
+skinparam shadowing false
+' STYLE END
+
+
+class "NewEvent" as NewEvent << (S, SkyBlue) struct >> { 
+  ~title : String
+  ~description : String
+  ~startDate : Double
+  ~endDate : Double
+  ~location : String 
+}
+class "NewEvent" as NewEvent0 << (X, Orchid) extension >> { 
+  {static} validations(_:) 
+}
+class "EventApplicationState" as EventApplicationState << (S, SkyBlue) struct >> { 
+  ~didApply : Bool 
+}
+class "NewEventImageUpload" as NewEventImageUpload << (S, SkyBlue) struct >> { 
+  ~image : Data 
+}
+class "EventController" as EventController << (S, SkyBlue) struct >> { 
+  ~imageFolder
+  ~boot(routes:)
+  -checkIfExists(_:req:) 
+}
+Content <|-- NewEvent : inherits
+Validatable <|-- NewEvent : inherits
+Content <|-- EventApplicationState : inherits
+Content <|-- NewEventImageUpload : inherits
+RouteCollection <|-- EventController : inherits
+NewEvent <.. NewEvent0 : ext
+@enduml

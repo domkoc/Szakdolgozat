@@ -1,0 +1,131 @@
+@startuml
+' STYLE START
+hide empty members
+skinparam shadowing false
+' STYLE END
+
+
+class "CreateUsers" as CreateUsers << (S, SkyBlue) struct >> { 
+  ~prepare(on:)
+  ~revert(on:) 
+}
+class "SCHgroup" as SCHgroup << (E, LightSteelBlue) enum >> { 
+  ~sir
+  ~nyuszi
+  ~ttny
+  ~drwu
+  ~fekete 
+}
+class "Roles" as Roles << (E, LightSteelBlue) enum >> { 
+  ~user
+  ~admin 
+}
+class "User" as User << (C, DarkSeaGreen) >> { 
+  ~{static} schema
+  ~id : UUID?
+  ~username : String
+  ~image : String?
+  ~passwordHash : String
+  ~fullname : String
+  ~nickname : String?
+  ~schgroup : SCHgroup?
+  ~roles : [Roles]
+  ~createdAt : Date?
+  ~updatedAt : Date?
+  ~events : [Event]
+  ~init()
+  ~init(id:username:passwordHash:fullname:nickname:schgroup:roles:)
+  ~{static} create(from:)
+  ~createToken(source:) 
+}
+class "User" as User0 << (X, Orchid) extension >> { 
+  asPublic() 
+}
+class "EventLoopFuture" as EventLoopFuture << (X, Orchid) extension >> { 
+  asPublic() 
+}
+class "EventLoopFuture" as EventLoopFuture1 << (X, Orchid) extension >> {  
+}
+class "Collection" as Collection << (X, Orchid) extension >> { 
+  asPublic() 
+}
+class "EventLoopFuture" as EventLoopFuture2 << (X, Orchid) extension >> { 
+  asPublic() 
+}
+class "User" as User3 << (X, Orchid) extension >> { 
+  {static} usernameKey
+  {static} passwordHashKey
+  verify(password:) 
+}
+class "User" as User4 << (X, Orchid) extension >> {  
+}
+class "User" as User5 << (X, Orchid) extension >> {  
+}
+class "UserLoginAuthenticator" as UserLoginAuthenticator << (S, SkyBlue) struct >> { 
+  ~authenticate(request:) 
+}
+class "UserSignup" as UserSignup << (S, SkyBlue) struct >> { 
+  ~username : String
+  ~password : String
+  ~fullname : String
+  ~nickname : String?
+  ~schgroup : SCHgroup? 
+}
+class "UserLogin" as UserLogin << (S, SkyBlue) struct >> { 
+  ~email : String
+  ~password : String 
+}
+class "NewSession" as NewSession << (S, SkyBlue) struct >> { 
+  ~token : String
+  ~user : User.Public
+  ~expiration : Double? 
+}
+class "UserEdit" as UserEdit << (S, SkyBlue) struct >> { 
+  ~id : UUID
+  ~username : String
+  ~fullname : String
+  ~nickname : String?
+  ~schgroup : SCHgroup? 
+}
+class "NewProfileImageUpload" as NewProfileImageUpload << (S, SkyBlue) struct >> { 
+  ~image : Data 
+}
+class "UserSignup" as UserSignup6 << (X, Orchid) extension >> { 
+  {static} validations(_:) 
+}
+class "UserEdit" as UserEdit7 << (X, Orchid) extension >> { 
+  {static} validations(_:) 
+}
+class "UserController" as UserController << (S, SkyBlue) struct >> { 
+  ~imageFolder
+  ~boot(routes:)
+  ~getMyOwnUser(req:)
+  -checkIfUserExists(_:req:) 
+}
+Migration <|-- CreateUsers : inherits
+String -- SCHgroup : inherits
+Codable -- SCHgroup : inherits
+String -- Roles : inherits
+Codable -- Roles : inherits
+Authenticatable <.. EventLoopFuture : inherits
+ModelAuthenticatable <|-- User : inherits
+ModelSessionAuthenticatable <|-- User : inherits
+Authenticatable <|-- User : inherits
+RequestAuthenticator <|-- UserLoginAuthenticator : inherits
+Content <|-- UserSignup : inherits
+Content <|-- UserLogin : inherits
+Content <|-- NewSession : inherits
+Content <|-- UserEdit : inherits
+Content <|-- NewProfileImageUpload : inherits
+Validatable <|-- UserSignup : inherits
+Validatable <|-- UserEdit : inherits
+RouteCollection <|-- UserController : inherits
+User <.. User0 : ext
+EventLoopFuture <.. EventLoopFuture1 : ext
+EventLoopFuture <.. EventLoopFuture2 : ext
+User <.. User3 : ext
+User <.. User4 : ext
+User <.. User5 : ext
+UserSignup <.. UserSignup6 : ext
+UserEdit <.. UserEdit7 : ext
+@enduml

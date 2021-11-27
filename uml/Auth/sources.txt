@@ -1,0 +1,301 @@
+@startuml
+' STYLE START
+hide empty members
+skinparam shadowing false
+' STYLE END
+
+
+class "Login" as Login << (S, SkyBlue) struct >> { 
+  ~email : String
+  ~password : String 
+}
+class "UserService" as UserService << (C, DarkSeaGreen) >> { 
+  ~{static} shared
+  -init()
+  -currentUserKey
+  -userDefaults
+  ~currentUser : User? 
+}
+class "NetworkManager" as NetworkManager << (C, DarkSeaGreen) >> { 
+  ~{static} shared
+  -session : Session
+  -init()
+  -interceptor : RequestInterceptor
+  -serverURL : String
+  ~baseRequest(method:path:)
+  ~request(method:path:isAuthenticated:acceptHttpContent:completion:)
+  ~request(method:path:parameters:body:isAuthenticated:completion:)
+  ~request(method:path:isAuthenticated:completion:)
+  ~request(method:path:parameters:body:isAuthenticated:completion:)
+  -getObject(request:isAuthenticated:completion:)
+  -getData(request:isAuthenticated:acceptHttpContent:completion:)
+  ~uploadPicture(path:imageData:completion:progressHandler:)
+  ~getPicture(path:completion:) 
+}
+class "AuthenticationServiceSuccess" as AuthenticationServiceSuccess << (E, LightSteelBlue) enum >> {  
+}
+class "AuthenticationServiceError" as AuthenticationServiceError << (E, LightSteelBlue) enum >> { 
+  ~error(_:) 
+}
+class "AuthenticationService" as AuthenticationService << (C, DarkSeaGreen) >> { 
+  ~{static} shared
+  -authenticationApi : AuthenticationAPIInput
+  -init()
+  ~hasValidAccessToken : Bool
+  ~loginWithCredentials(credentials:completion:)
+  -saveLoginData(_:)
+  -saveUser(id:userName:)
+  ~clearUserData()
+  -saveToken(_:expiration:)
+  ~logout(completion:) 
+}
+class "AuthenticationAPIInput" as AuthenticationAPIInput << (P, GoldenRod) protocol >> { 
+  ~login(with:completion:)
+  ~register(with:completion:) 
+}
+class "AuthenticationAPI" as AuthenticationAPI << (C, DarkSeaGreen) >> {  
+}
+class "AuthenticationAPI" as AuthenticationAPI0 << (X, Orchid) extension >> { 
+  login(with:completion:)
+  register(with:completion:) 
+}
+class "SSSLAuthenticator" as SSSLAuthenticator << (C, DarkSeaGreen) >> { 
+  -tokenManager : TokenManager
+  ~coordinator : AppCoordinator?
+  ~init(tokenManager:)
+  ~apply(_:to:)
+  ~refresh(_:for:completion:)
+  -logInAgain()
+  ~didRequest(_:with:failDueToAuthenticationError:)
+  ~isRequest(_:authenticatedWith:) 
+}
+class "TokenManager" as TokenManager << (P, GoldenRod) protocol >> { 
+  ~save(token:)
+  ~get() 
+}
+class "KeyChainTokenManager" as KeyChainTokenManager << (C, DarkSeaGreen) >> { 
+  ~{static} shared
+  -keychain
+  -init()
+  ~save(token:)
+  ~get() 
+}
+class "UserDefaultsTokenManager" as UserDefaultsTokenManager << (C, DarkSeaGreen) >> { 
+  ~{static} shared
+  -userDefaults
+  -init()
+  ~save(token:)
+  ~get() 
+}
+class "LoginDTO" as LoginDTO << (S, SkyBlue) struct >> { 
+  ~email : String
+  ~password : String 
+}
+class "UserCredentialsDto" as UserCredentialsDto << (S, SkyBlue) struct >> { 
+  ~token : String?
+  ~user : ProfileDownloadDto
+  ~expiration : Double? 
+}
+class "AuthenticationCoordinatorInput" as AuthenticationCoordinatorInput << (P, GoldenRod) protocol >> { 
+  ~navigateToRegister()
+  ~navigateToMainScreen()
+  ~navigateBackToLogin() 
+}
+class "AuthenticationCoordinator" as AuthenticationCoordinator << (C, DarkSeaGreen) >> { 
+  -rootViewController : UINavigationController?
+  -appCoordinator : AppCoordinator?
+  -authenticationApi : AuthenticationAPIInput
+  -profileApi : ProfileAPIInput
+  -interactor : AuthenticationInteractorInput
+  -authenticationService : AuthenticationService
+  ~init(rootViewController:appCoordinator:)
+  ~start()
+  -navigateToLogin() 
+}
+class "AuthenticationCoordinator" as AuthenticationCoordinator1 << (X, Orchid) extension >> { 
+  navigateToRegister()
+  navigateToMainScreen()
+  navigateBackToLogin() 
+}
+class "AuthenticationViewControllerFactory" as AuthenticationViewControllerFactory << (C, DarkSeaGreen) >> {  
+}
+class "RegisterPresenterInput" as RegisterPresenterInput << (P, GoldenRod) protocol >> { 
+  ~view : RegisterView?
+  ~interactor : AuthenticationInteractorInput
+  ~register(with:) 
+}
+class "RegisterPresenter" as RegisterPresenter << (C, DarkSeaGreen) >> { 
+  ~view : RegisterView?
+  ~interactor : AuthenticationInteractorInput
+  -coordinator : AuthenticationCoordinatorInput
+  ~init(coordinator:interactor:view:) 
+}
+class "RegisterPresenter" as RegisterPresenter2 << (X, Orchid) extension >> { 
+  register(with:) 
+}
+class "RegisterPresentationModel" as RegisterPresentationModel << (S, SkyBlue) struct >> { 
+  ~profileUploadDto : ProfileUploadDto 
+}
+class "RegisterView" as RegisterView << (P, GoldenRod) protocol >> { 
+  ~presenter : RegisterPresenterInput?
+  ~enableRegisterButton() 
+}
+class "RegisterViewController" as RegisterViewController << (C, DarkSeaGreen) >> { 
+  ~registerButton : UIButton!
+  ~emailTextField : UITextField!
+  ~passwordTextField : UITextField!
+  ~fullNameTextField : UITextField!
+  ~groupTextField : UITextField!
+  ~nicknameTextField : UITextField!
+  -schGroupPicker
+  ~presenter : RegisterPresenterInput?
+  ~viewDidLoad()
+  -customizeViews()
+  -customizeTextFields()
+  -customizePicker()
+  ~registerButtonTapped(_:)
+  -verifyInputs() 
+}
+class "RegisterViewController" as RegisterViewController3 << (X, Orchid) extension >> { 
+  enableRegisterButton() 
+}
+class "RegisterViewController" as RegisterViewController4 << (X, Orchid) extension >> { 
+  numberOfComponents(in:)
+  pickerView(_:numberOfRowsInComponent:)
+  pickerView(_:titleForRow:forComponent:) 
+}
+class "RegisterViewController" as RegisterViewController5 << (X, Orchid) extension >> { 
+  pickerView(_:didSelectRow:inComponent:) 
+}
+class "LoginView" as LoginView << (P, GoldenRod) protocol >> { 
+  ~presenter : LoginPresenterInput?
+  ~credentials() 
+}
+class "LoginViewController" as LoginViewController << (C, DarkSeaGreen) >> { 
+  ~emailTextField : UITextField!
+  ~passwordTextField : UITextField!
+  ~loginButton : UIButton!
+  ~presenter : LoginPresenterInput?
+  ~viewDidLoad()
+  -customizeViews()
+  ~registerButtonTapped(_:)
+  ~loginButtonTapped(_:) 
+}
+class "LoginViewController" as LoginViewController6 << (X, Orchid) extension >> { 
+  credentials() 
+}
+class "LoginPresentationModel" as LoginPresentationModel << (S, SkyBlue) struct >> { 
+  ~email : String
+  ~password : String 
+}
+class "LoginPresenterInput" as LoginPresenterInput << (P, GoldenRod) protocol >> { 
+  ~view : LoginView?
+  ~interactor : AuthenticationInteractorInput
+  ~navigateToRegister()
+  ~login() 
+}
+class "LoginPresenter" as LoginPresenter << (C, DarkSeaGreen) >> { 
+  ~view : LoginView?
+  ~interactor : AuthenticationInteractorInput
+  -coordinator : AuthenticationCoordinatorInput
+  ~init(coordinator:interactor:view:) 
+}
+class "LoginPresenter" as LoginPresenter7 << (X, Orchid) extension >> { 
+  login()
+  navigateToRegister() 
+}
+class "AuthenticationInteractorSuccess" as AuthenticationInteractorSuccess << (S, SkyBlue) struct >> {  
+}
+class "AuthenticationInteractorError" as AuthenticationInteractorError << (E, LightSteelBlue) enum >> { 
+  ~error(_:) 
+}
+class "AuthenticationInteractorInput" as AuthenticationInteractorInput << (P, GoldenRod) protocol >> { 
+  ~login(credentials:completion:)
+  ~register(credentials:completion:) 
+}
+class "AuthenticationInteractor" as AuthenticationInteractor << (C, DarkSeaGreen) >> { 
+  -authenticationApi : AuthenticationAPIInput
+  -profileApi : ProfileAPIInput
+  -authenticationService : AuthenticationService
+  ~init(authenticationApi:profileApi:authenticationService:) 
+}
+class "AuthenticationInteractor" as AuthenticationInteractor8 << (X, Orchid) extension >> { 
+  login(credentials:completion:)
+  register(credentials:completion:) 
+}
+class "ErrorResponse" as ErrorResponse << (S, SkyBlue) struct >> { 
+  ~reason : String 
+}
+class "EmptyDto" as EmptyDto << (S, SkyBlue) struct >> {  
+}
+class "SSSLAuthCredentials" as SSSLAuthCredentials << (S, SkyBlue) struct >> { 
+  ~{static} maxMinutesTillExpiration : TimeInterval
+  ~token : String
+  ~expiration : Date?
+  ~requiresRefresh : Bool
+  ~init(token:)
+  ~setExpiration(_:) 
+}
+class "NetworkConfigurator" as NetworkConfigurator << (C, DarkSeaGreen) >> { 
+  ~{static} shared
+  ~tokenManager : TokenManager
+  -authenticator : SSSLAuthenticator
+  ~interceptor : AuthenticationInterceptor<SSSLAuthenticator>
+  ~serverUrl
+  ~serverBaseUrl
+  -init()
+  ~configure(coordinator:) 
+}
+class "ErrorManagerInput" as ErrorManagerInput << (P, GoldenRod) protocol >> { 
+  ~errorMessage(for:)
+  ~errorMessage(for:)
+  ~errorMessage() 
+}
+class "ErrorManager" as ErrorManager << (C, DarkSeaGreen) >> { 
+  ~{static} shared
+  -init() 
+}
+class "ErrorManager" as ErrorManager9 << (X, Orchid) extension >> { 
+  errorMessage(for:)
+  errorMessage(for:)
+  errorMessage() 
+}
+Error -- AuthenticationServiceError : inherits
+APIBase <|-- AuthenticationAPI : inherits
+AuthenticationAPIInput <|.. AuthenticationAPI : confirms to
+Authenticator <|-- SSSLAuthenticator : inherits
+TokenManager <|.. KeyChainTokenManager : confirms to
+TokenManager <|.. UserDefaultsTokenManager : confirms to
+Codable <|-- LoginDTO : inherits
+Decodable <|-- UserCredentialsDto : inherits
+AuthenticationCoordinatorInput <|.. AuthenticationCoordinator : confirms to
+AnyObject <|.. RegisterPresenterInput : inherits
+RegisterPresenterInput <|.. RegisterPresenter : confirms to
+BaseView <|.. RegisterView : inherits
+UIViewController <|-- RegisterViewController : inherits
+RegisterView <|.. RegisterViewController : confirms to
+UIPickerViewDataSource <|-- RegisterViewController : inherits
+UIPickerViewDelegate <|-- RegisterViewController : inherits
+BaseView <|.. LoginView : inherits
+UIViewController <|-- LoginViewController : inherits
+LoginView <|.. LoginViewController : confirms to
+AnyObject <|.. LoginPresenterInput : inherits
+LoginPresenterInput <|.. LoginPresenter : confirms to
+Error -- AuthenticationInteractorError : inherits
+AnyObject <|.. AuthenticationInteractorInput : inherits
+AuthenticationInteractorInput <|.. AuthenticationInteractor : confirms to
+Decodable <|-- ErrorResponse : inherits
+Codable <|-- EmptyDto : inherits
+AuthenticationCredential <|-- SSSLAuthCredentials : inherits
+ErrorManagerInput <|.. ErrorManager : confirms to
+AuthenticationAPI <.. AuthenticationAPI0 : ext
+AuthenticationCoordinator <.. AuthenticationCoordinator1 : ext
+RegisterPresenter <.. RegisterPresenter2 : ext
+RegisterViewController <.. RegisterViewController3 : ext
+RegisterViewController <.. RegisterViewController4 : ext
+RegisterViewController <.. RegisterViewController5 : ext
+LoginViewController <.. LoginViewController6 : ext
+LoginPresenter <.. LoginPresenter7 : ext
+AuthenticationInteractor <.. AuthenticationInteractor8 : ext
+ErrorManager <.. ErrorManager9 : ext
+@enduml

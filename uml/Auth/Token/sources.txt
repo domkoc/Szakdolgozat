@@ -1,0 +1,29 @@
+@startuml
+' STYLE START
+hide empty members
+skinparam shadowing false
+' STYLE END
+
+
+class "TokenManager" as TokenManager << (P, GoldenRod) protocol >> { 
+  ~save(token:)
+  ~get() 
+}
+class "KeyChainTokenManager" as KeyChainTokenManager << (C, DarkSeaGreen) >> { 
+  ~{static} shared
+  -keychain
+  -init()
+  ~save(token:)
+  ~get() 
+}
+class "UserDefaultsTokenManager" as UserDefaultsTokenManager << (C, DarkSeaGreen) >> { 
+  ~{static} shared
+  -userDefaults
+  -init()
+  ~save(token:)
+  ~get() 
+}
+TokenManager <|.. KeyChainTokenManager : confirms to
+TokenManager <|.. UserDefaultsTokenManager : confirms to
+
+@enduml

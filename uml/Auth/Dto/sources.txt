@@ -1,0 +1,20 @@
+@startuml
+' STYLE START
+hide empty members
+skinparam shadowing false
+' STYLE END
+
+
+class "LoginDTO" as LoginDTO << (S, SkyBlue) struct >> { 
+  ~email : String
+  ~password : String 
+}
+class "UserCredentialsDto" as UserCredentialsDto << (S, SkyBlue) struct >> { 
+  ~token : String?
+  ~user : ProfileDownloadDto
+  ~expiration : Double? 
+}
+Codable <|-- LoginDTO : inherits
+Decodable <|-- UserCredentialsDto : inherits
+
+@enduml

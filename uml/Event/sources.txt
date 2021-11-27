@@ -1,0 +1,514 @@
+@startuml
+' STYLE START
+hide empty members
+skinparam shadowing false
+' STYLE END
+
+
+class "EventDownloadDto" as EventDownloadDto << (S, SkyBlue) struct >> { 
+  ~id : UUID
+  ~organizer : UUID
+  ~title : String
+  ~description : String
+  ~start_date : Double
+  ~end_date : Double
+  ~location : String
+  ~is_applyable : Bool
+  ~application_start : Double?
+  ~application_end : Double?
+  ~parent_event : UUID? 
+}
+class "NewEventUploadDto" as NewEventUploadDto << (S, SkyBlue) struct >> { 
+  ~title : String
+  ~description : String
+  ~startDate : Double
+  ~endDate : Double
+  ~location : String 
+}
+class "EventApplicationStateDto" as EventApplicationStateDto << (S, SkyBlue) struct >> { 
+  ~did_apply : Bool 
+}
+class "EventPictureUploadDto" as EventPictureUploadDto << (S, SkyBlue) struct >> { 
+  ~image : Data 
+}
+class "EventAPIInput" as EventAPIInput << (P, GoldenRod) protocol >> { 
+  ~getAllEvent(completion:)
+  ~createNewEvent(with:completion:)
+  ~getEventsByUserId(with:completion:)
+  ~getEventApplicationState(with:completion:)
+  ~applyToEvent(with:completion:)
+  ~toggleEventAppliability(with:completion:)
+  ~getApplicantsByEvent(with:completion:)
+  ~getWorkersByEvent(with:completion:)
+  ~acceptApplicant(_:on:completion:)
+  ~getSubEvents(of:completion:)
+  ~createNewSubEvent(for:with:completion:)
+  ~uploadEventPicture(_:for:progressCompletion:completion:)
+  ~getEventPicture(of:completion:) 
+}
+class "EventAPI" as EventAPI << (C, DarkSeaGreen) >> {  
+}
+class "EventAPI" as EventAPI0 << (X, Orchid) extension >> { 
+  getAllEvent(completion:)
+  createNewEvent(with:completion:)
+  getEventsByUserId(with:completion:)
+  getEventApplicationState(with:completion:)
+  applyToEvent(with:completion:)
+  toggleEventAppliability(with:completion:)
+  getApplicantsByEvent(with:completion:)
+  getWorkersByEvent(with:completion:)
+  acceptApplicant(_:on:completion:)
+  getSubEvents(of:completion:)
+  createNewSubEvent(for:with:completion:)
+  uploadEventPicture(_:for:progressCompletion:completion:)
+  getEventPicture(of:completion:) 
+}
+class "Event" as Event << (S, SkyBlue) struct >> { 
+  ~id : UUID
+  ~organizerID : UUID
+  ~title : String
+  ~description : String
+  ~startDate : Date
+  ~endDate : Date
+  ~location : CLLocation
+  ~isApplyable : Bool
+  ~applicationStart : Date?
+  ~applicationEnd : Date?
+  ~parentEventID : UUID?
+  ~init(id:organizerID:title:description:startDate:endDate:location:isApplyable:applicationStart:applicationEnd:parentEventID:)
+  ~init(dto:) 
+}
+class "NewEvent" as NewEvent << (S, SkyBlue) struct >> { 
+  ~title : String
+  ~description : String
+  ~startDate : Date
+  ~endDate : Date
+  ~location : Location
+  ~dto : NewEventUploadDto 
+}
+class "NewEventPresentationModel" as NewEventPresentationModel << (S, SkyBlue) struct >> { 
+  ~event : NewEvent 
+}
+class "NewEventView" as NewEventView << (P, GoldenRod) protocol >> { 
+  ~presenter : NewEventPresenterInput?
+  ~enableDoneButton() 
+}
+class "NewEventViewController" as NewEventViewController << (C, DarkSeaGreen) >> { 
+  ~locationLabel : UILabel!
+  ~titleTextField : UITextField!
+  ~startDateTextField : UITextField!
+  ~endDateTextField : UITextField!
+  ~descriptionTextView : UITextView!
+  ~doneButton : UIButton!
+  -locationPicker
+  -endDatePicker
+  -startDatePicker
+  -dateFormatter
+  -selectedLocation : Location?
+  ~presenter : NewEventPresenterInput?
+  ~viewDidLoad()
+  -customizeViews()
+  -customizeLocationPicker()
+  -customizeTextFields()
+  -customizeDatePicker()
+  -customizeDateFormatter()
+  -startDateSelected()
+  -endDateSelected()
+  ~selectLocationButtonTapped(_:)
+  ~doneButtonTapped(_:)
+  -verifyInputs() 
+}
+class "NewEventViewController" as NewEventViewController1 << (X, Orchid) extension >> { 
+  enableDoneButton() 
+}
+class "NewEventPresenterInput" as NewEventPresenterInput << (P, GoldenRod) protocol >> { 
+  ~view : NewEventView?
+  ~interactor : EventsInteractorInput
+  ~presentationModel : NewEventPresentationModel?
+  ~saveNewEvent(_:) 
+}
+class "NewEventPresenter" as NewEventPresenter << (C, DarkSeaGreen) >> { 
+  ~view : NewEventView?
+  ~interactor : EventsInteractorInput
+  -coordinator : EventsCoordinatorInput
+  ~presentationModel : NewEventPresentationModel?
+  -mainEvent : Event?
+  ~init(view:interactor:coordinator:mainEvent:) 
+}
+class "NewEventPresenter" as NewEventPresenter2 << (X, Orchid) extension >> { 
+  saveNewEvent(_:) 
+}
+class "EventApplicantsPresentationModel" as EventApplicantsPresentationModel << (S, SkyBlue) struct >> { 
+  ~applicants : [Profile]
+  ~workers : [Profile] 
+}
+class "EventApplicantsView" as EventApplicantsView << (P, GoldenRod) protocol >> { 
+  ~presenter : EventApplicantsPresenterInput?
+  ~loadData() 
+}
+class "EventApplicantsViewController" as EventApplicantsViewController << (C, DarkSeaGreen) >> { 
+  ~applicantsTableView : UITableView!
+  ~workersTableView : UITableView!
+  ~acceptButtonTopConstraint : NSLayoutConstraint!
+  ~acceptButtonHeightConstraint : NSLayoutConstraint!
+  ~acceptButton : UIButton!
+  ~profileButton : UIButton!
+  ~presenter : EventApplicantsPresenterInput?
+  -selectedProfile : Profile?
+  ~viewDidLoad()
+  ~viewDidAppear(_:)
+  -customizeViews()
+  -customizeTableViews()
+  ~acceptButtonTapped(_:)
+  ~profileButtonTapped(_:) 
+}
+class "EventApplicantsViewController" as EventApplicantsViewController3 << (X, Orchid) extension >> { 
+  loadData() 
+}
+class "EventApplicantsViewController" as EventApplicantsViewController4 << (X, Orchid) extension >> { 
+  tableView(_:titleForHeaderInSection:)
+  tableView(_:numberOfRowsInSection:)
+  tableView(_:cellForRowAt:) 
+}
+class "EventApplicantsViewController" as EventApplicantsViewController5 << (X, Orchid) extension >> { 
+  tableView(_:didSelectRowAt:)
+  tableView(_:didDeselectRowAt:) 
+}
+class "EventApplicantsPresenterInput" as EventApplicantsPresenterInput << (P, GoldenRod) protocol >> { 
+  ~view : EventApplicantsView?
+  ~interactor : EventsInteractorInput
+  ~presentationModel : EventApplicantsPresentationModel?
+  ~loadData()
+  ~navigateToProfile(of:)
+  ~acceptApplicant(_:)
+  ~isOrganizer() 
+}
+class "EventApplicantsPresenter" as EventApplicantsPresenter << (C, DarkSeaGreen) >> { 
+  -errors : [String]
+  ~view : EventApplicantsView?
+  ~interactor : EventsInteractorInput
+  -coordinator : EventsCoordinatorInput
+  -event : Event
+  ~presentationModel : EventApplicantsPresentationModel?
+  ~init(view:interactor:coordinator:event:) 
+}
+class "EventApplicantsPresenter" as EventApplicantsPresenter6 << (X, Orchid) extension >> { 
+  loadData()
+  -loadApplicants(_:)
+  -loadWorkers(_:)
+  navigateToProfile(of:)
+  acceptApplicant(_:)
+  isOrganizer() 
+}
+class "AllEventsView" as AllEventsView << (P, GoldenRod) protocol >> { 
+  ~presenter : AllEventsPresenterInput?
+  ~loadEventsData(_:) 
+}
+class "AllEventsViewController" as AllEventsViewController << (C, DarkSeaGreen) >> { 
+  ~eventsTableView : UITableView!
+  ~newEventButtonTopConstraint : NSLayoutConstraint!
+  ~newEventButtonHeightConstraint : NSLayoutConstraint!
+  ~newEventButton : UIButton!
+  ~presenter : AllEventsPresenterInput?
+  -presentationModel : AllEventsPresentationModel?
+  ~viewDidLoad()
+  ~viewWillAppear(_:)
+  -customizeViews()
+  -customizeTableView()
+  ~newEventButtonTapped(_:) 
+}
+class "AllEventsViewController" as AllEventsViewController7 << (X, Orchid) extension >> { 
+  loadEventsData(_:) 
+}
+class "AllEventsViewController" as AllEventsViewController8 << (X, Orchid) extension >> { 
+  tableView(_:numberOfRowsInSection:)
+  tableView(_:cellForRowAt:) 
+}
+class "AllEventsViewController" as AllEventsViewController9 << (X, Orchid) extension >> { 
+  tableView(_:didSelectRowAt:) 
+}
+class "AllEventsPresentationModel" as AllEventsPresentationModel << (S, SkyBlue) struct >> { 
+  ~events : [Event] 
+}
+class "AllEventsPresenterInput" as AllEventsPresenterInput << (P, GoldenRod) protocol >> { 
+  ~view : AllEventsView?
+  ~interactor : EventsInteractorInput
+  ~presentationModel : AllEventsPresentationModel?
+  ~loadEventsData()
+  ~navigateToNewEvent()
+  ~navigateToEvent(index:)
+  ~isUsersEvents() 
+}
+class "AllEventsPresenter" as AllEventsPresenter << (C, DarkSeaGreen) >> { 
+  ~view : AllEventsView?
+  ~interactor : EventsInteractorInput
+  -coordinator : EventsCoordinatorInput
+  ~presentationModel : AllEventsPresentationModel?
+  -userid : UUID?
+  ~init(view:interactor:coordinator:userid:) 
+}
+class "AllEventsPresenter" as AllEventsPresenter10 << (X, Orchid) extension >> { 
+  loadEventsData()
+  navigateToNewEvent()
+  navigateToEvent(index:)
+  isUsersEvents() 
+}
+class "SubEventsView" as SubEventsView << (P, GoldenRod) protocol >> { 
+  ~presenter : SubEventsPresenterInput?
+  ~loadData() 
+}
+class "SubEventsViewController" as SubEventsViewController << (C, DarkSeaGreen) >> { 
+  ~subEventsTableView : UITableView!
+  ~presenter : SubEventsPresenterInput?
+  ~viewDidLoad()
+  ~viewDidAppear(_:)
+  -customizeViews()
+  -customizeTableView()
+  ~newSubEventButtonTapped(_:) 
+}
+class "SubEventsViewController" as SubEventsViewController11 << (X, Orchid) extension >> { 
+  loadData() 
+}
+class "SubEventsViewController" as SubEventsViewController12 << (X, Orchid) extension >> { 
+  tableView(_:numberOfRowsInSection:)
+  tableView(_:cellForRowAt:) 
+}
+class "SubEventsViewController" as SubEventsViewController13 << (X, Orchid) extension >> { 
+  subEventSelected(_:) 
+}
+class "SubEventsPresenterInput" as SubEventsPresenterInput << (P, GoldenRod) protocol >> { 
+  ~view : SubEventsView?
+  ~interactor : EventsInteractorInput
+  ~presentationModel : SubEventsPresentationModel?
+  ~loadData()
+  ~navigateToSubEvent(_:)
+  ~navigateToNewSubEvent() 
+}
+class "SubEventsPresenter" as SubEventsPresenter << (C, DarkSeaGreen) >> { 
+  ~view : SubEventsView?
+  ~interactor : EventsInteractorInput
+  -coordinator : EventsCoordinatorInput
+  -parentEvent : Event
+  ~presentationModel : SubEventsPresentationModel?
+  ~init(view:interactor:coordinator:parentEvent:) 
+}
+class "SubEventsPresenter" as SubEventsPresenter14 << (X, Orchid) extension >> { 
+  loadData()
+  navigateToSubEvent(_:)
+  navigateToNewSubEvent() 
+}
+class "SubEventsPresentationModel" as SubEventsPresentationModel << (S, SkyBlue) struct >> { 
+  ~subEvents : [Event] 
+}
+class "EventsInteractorSuccess" as EventsInteractorSuccess << (S, SkyBlue) struct >> {  
+}
+class "EventsInteractorError" as EventsInteractorError << (E, LightSteelBlue) enum >> { 
+  ~error(_:) 
+}
+class "EventsInteractorInput" as EventsInteractorInput << (P, GoldenRod) protocol >> { 
+  ~getEvents(completion:)
+  ~createNewEvent(newEvent:completion:)
+  ~getProfileById(id:completion:)
+  ~getEventsByUserId(id:completion:)
+  ~getEventApplicationState(event:completion:)
+  ~applyToEvent(event:completion:)
+  ~toggleEventAppliability(event:completion:)
+  ~getApplicantsByEvent(id:completion:)
+  ~getWorkersByEvent(id:completion:)
+  ~acceptApplication(userid:eventid:completion:)
+  ~getSubEvents(of:completion:)
+  ~createNewSubEvent(for:newEvent:completion:)
+  ~uploadEventPicture(_:for:completion:)
+  ~getEventImage(of:completion:) 
+}
+class "EventsInteractor" as EventsInteractor << (C, DarkSeaGreen) >> { 
+  -eventApi : EventAPIInput
+  -profileApi : ProfileAPIInput
+  ~init(eventApi:profileApi:) 
+}
+class "EventsInteractor" as EventsInteractor15 << (X, Orchid) extension >> { 
+  getEvents(completion:)
+  createNewEvent(newEvent:completion:)
+  getProfileById(id:completion:)
+  getEventsByUserId(id:completion:)
+  getEventApplicationState(event:completion:)
+  applyToEvent(event:completion:)
+  toggleEventAppliability(event:completion:)
+  getApplicantsByEvent(id:completion:)
+  getWorkersByEvent(id:completion:)
+  acceptApplication(userid:eventid:completion:)
+  getSubEvents(of:completion:)
+  createNewSubEvent(for:newEvent:completion:)
+  uploadEventPicture(_:for:completion:)
+  getEventImage(of:completion:) 
+}
+class "EventsViewControllerFactory" as EventsViewControllerFactory << (C, DarkSeaGreen) >> {  
+}
+class "EventsCoordinatorInput" as EventsCoordinatorInput << (P, GoldenRod) protocol >> { 
+  ~navigateToNewEvent()
+  ~navigateToNewEvent(with:)
+  ~navigateToEventDetails(with:)
+  ~navigateToProfile(of:)
+  ~navigateToApplicants(of:)
+  ~navigateBack()
+  ~navigateToSubEvents(of:) 
+}
+class "EventsCoordinator" as EventsCoordinator << (C, DarkSeaGreen) >> { 
+  -rootViewController : UINavigationController?
+  -appCoordinator : AppCoordinator?
+  -eventApi : EventAPIInput
+  -profileApi : ProfileAPIInput
+  -interactor : EventsInteractorInput
+  ~init(rootViewController:appCoordinator:)
+  ~start(with:) 
+}
+class "EventsCoordinator" as EventsCoordinator16 << (X, Orchid) extension >> { 
+  navigateToNewEvent()
+  navigateToNewEvent(with:)
+  navigateToEventDetails(with:)
+  navigateToProfile(of:)
+  navigateToApplicants(of:)
+  navigateBack()
+  navigateToSubEvents(of:) 
+}
+class "EventDetailsView" as EventDetailsView << (P, GoldenRod) protocol >> { 
+  ~presenter : EventDetailsPresenterInput?
+  ~loadData(_:)
+  ~toggleApplyButtonState(didApply:)
+  ~toggleAppliabilityState(appliable:)
+  ~updateImage(_:) 
+}
+class "EventDetailsViewController" as EventDetailsViewController << (C, DarkSeaGreen) >> { 
+  ~imageView : UIImageView!
+  ~titleLabel : UILabel!
+  ~usernameButton : UIButton!
+  ~dateLabel : UILabel!
+  ~locationMapView : MKMapView!
+  ~applyButton : UIButton!
+  ~contentScrollView : UIScrollView!
+  ~presenter : EventDetailsPresenterInput?
+  ~viewDidLoad()
+  ~viewDidAppear(_:)
+  -customizeViews()
+  -customizeApplyButton()
+  ~usernameButtonTapped(_:)
+  ~applyButtonTapped(_:)
+  ~listApplicationsButtonTapped(_:)
+  ~listSubEventsButtonTapped(_:)
+  ~imageViewLongPressed(_:)
+  -imageSelected(_:) 
+}
+class "EventDetailsViewController" as EventDetailsViewController17 << (X, Orchid) extension >> { 
+  loadData(_:)
+  toggleApplyButtonState(didApply:)
+  toggleAppliabilityState(appliable:)
+  updateImage(_:) 
+}
+class "EventDetailsViewController" as EventDetailsViewController18 << (X, Orchid) extension >> { 
+  imagePickerController(_:didFinishPickingMediaWithInfo:)
+  imagePickerControllerDidCancel(_:) 
+}
+class "EventDetailsPresentationModel" as EventDetailsPresentationModel << (S, SkyBlue) struct >> { 
+  ~event : Event
+  ~organizer : Profile?
+  ~didApplyToEvent : Bool? 
+}
+class "EventDetailsPresenterInput" as EventDetailsPresenterInput << (P, GoldenRod) protocol >> { 
+  ~view : EventDetailsView?
+  ~interactor : EventsInteractorInput
+  ~presentationModel : EventDetailsPresentationModel
+  ~loadEventData()
+  ~navigateToOrganizerProfile()
+  ~applyToEvent()
+  ~toggleAppliability()
+  ~isOrganizer()
+  ~navigateToEventApplications()
+  ~navigateToSubEvents()
+  ~uploadEventPicture(_:)
+  ~loadImage() 
+}
+class "EventDetailsPresenter" as EventDetailsPresenter << (C, DarkSeaGreen) >> { 
+  -errors : [String]
+  ~view : EventDetailsView?
+  ~interactor : EventsInteractorInput
+  -coordinator : EventsCoordinatorInput
+  ~presentationModel : EventDetailsPresentationModel
+  ~init(view:interactor:coordinator:presentationModel:) 
+}
+class "EventDetailsPresenter" as EventDetailsPresenter19 << (X, Orchid) extension >> { 
+  loadEventData()
+  -loadOrganizer(_:)
+  -loadApplicationState(_:)
+  navigateToOrganizerProfile()
+  applyToEvent()
+  toggleAppliability()
+  isOrganizer()
+  navigateToEventApplications()
+  navigateToSubEvents()
+  uploadEventPicture(_:)
+  loadImage() 
+}
+Decodable <|-- EventDownloadDto : inherits
+Encodable <|-- NewEventUploadDto : inherits
+Decodable <|-- EventApplicationStateDto : inherits
+Encodable <|-- EventPictureUploadDto : inherits
+APIBase <|-- EventAPI : inherits
+EventAPIInput <|.. EventAPI : confirms to
+BaseView <|.. NewEventView : inherits
+UIViewController <|-- NewEventViewController : inherits
+NewEventView <|.. NewEventViewController : confirms to
+AnyObject <|.. NewEventPresenterInput : inherits
+NewEventPresenterInput <|.. NewEventPresenter : confirms to
+BaseView <|.. EventApplicantsView : inherits
+UIViewController <|-- EventApplicantsViewController : inherits
+EventApplicantsView <|.. EventApplicantsViewController : confirms to
+UITableViewDataSource <|-- EventApplicantsViewController : inherits
+UITableViewDelegate <|-- EventApplicantsViewController : inherits
+AnyObject <|.. EventApplicantsPresenterInput : inherits
+EventApplicantsPresenterInput <|.. EventApplicantsPresenter : confirms to
+BaseView <|.. AllEventsView : inherits
+UIViewController <|-- AllEventsViewController : inherits
+AllEventsView <|.. AllEventsViewController : confirms to
+UITableViewDataSource <|-- AllEventsViewController : inherits
+UITableViewDelegate <|-- AllEventsViewController : inherits
+AnyObject <|.. AllEventsPresenterInput : inherits
+AllEventsPresenterInput <|.. AllEventsPresenter : confirms to
+BaseView <|.. SubEventsView : inherits
+UIViewController <|-- SubEventsViewController : inherits
+SubEventsView <|.. SubEventsViewController : confirms to
+UITableViewDataSource <|-- SubEventsViewController : inherits
+SubEventsTableViewCellDelegate <|-- SubEventsViewController : inherits
+AnyObject <|.. SubEventsPresenterInput : inherits
+SubEventsPresenterInput <|.. SubEventsPresenter : confirms to
+Error -- EventsInteractorError : inherits
+AnyObject <|.. EventsInteractorInput : inherits
+EventsInteractorInput <|.. EventsInteractor : confirms to
+EventsCoordinatorInput <|.. EventsCoordinator : confirms to
+BaseView <|.. EventDetailsView : inherits
+UIViewController <|-- EventDetailsViewController : inherits
+EventDetailsView <|.. EventDetailsViewController : confirms to
+UIImagePickerControllerDelegate <|-- EventDetailsViewController : inherits
+UINavigationControllerDelegate <|-- EventDetailsViewController : inherits
+AnyObject <|.. EventDetailsPresenterInput : inherits
+EventDetailsPresenterInput <|.. EventDetailsPresenter : confirms to
+EventAPI <.. EventAPI0 : ext
+NewEventViewController <.. NewEventViewController1 : ext
+NewEventPresenter <.. NewEventPresenter2 : ext
+EventApplicantsViewController <.. EventApplicantsViewController3 : ext
+EventApplicantsViewController <.. EventApplicantsViewController4 : ext
+EventApplicantsViewController <.. EventApplicantsViewController5 : ext
+EventApplicantsPresenter <.. EventApplicantsPresenter6 : ext
+AllEventsViewController <.. AllEventsViewController7 : ext
+AllEventsViewController <.. AllEventsViewController8 : ext
+AllEventsViewController <.. AllEventsViewController9 : ext
+AllEventsPresenter <.. AllEventsPresenter10 : ext
+SubEventsViewController <.. SubEventsViewController11 : ext
+SubEventsViewController <.. SubEventsViewController12 : ext
+SubEventsViewController <.. SubEventsViewController13 : ext
+SubEventsPresenter <.. SubEventsPresenter14 : ext
+EventsInteractor <.. EventsInteractor15 : ext
+EventsCoordinator <.. EventsCoordinator16 : ext
+EventDetailsViewController <.. EventDetailsViewController17 : ext
+EventDetailsViewController <.. EventDetailsViewController18 : ext
+EventDetailsPresenter <.. EventDetailsPresenter19 : ext
+@enduml
